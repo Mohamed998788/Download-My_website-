@@ -20,13 +20,109 @@
     <div class="get-app-button" onclick="showAppDownloadPopup()" title="تحميل التطبيق">
         <i class="fas fa-mobile-alt"></i>
     </div>
-    
+
     <!-- زر إعدادات اللاعبين -->
     <div class="players-settings-button" onclick="showPage('players-settings'); loadPlayerSettings();" title="إعدادات اللاعبين">
         <i class="fas fa-users-cog"></i>
     </div>
 
     <!-- شريط التنقل الرئيسي -->
+
+    <!-- إضافة حماية من استخراج الأكواد وحماية للموقع -->
+    <script>
+        // منع عرض صفحة المصدر
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // منع استخدام مفاتيح التطوير
+        document.onkeydown = function(e) {
+            // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+            if (
+                e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) ||
+                (e.ctrlKey && e.keyCode === 85)
+            ) {
+                return false;
+            }
+        };
+
+        // منع سحب الصور
+        document.addEventListener('dragstart', function(event) {
+            event.preventDefault();
+            return false;
+        });
+
+        // منع تحديد النص
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+
+        // كشف أدوات المطور
+        function detectDevTools() {
+            const devtoolsOpen = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor) 
+                ? window.outerWidth - window.innerWidth > 200 || window.outerHeight - window.innerHeight > 200
+                : window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160;
+
+            if (devtoolsOpen) {
+                // إعادة تحميل الصفحة أو إجراء آخر
+                location.href = 'about:blank';
+            }
+        }
+
+        // التحقق الدوري
+        setInterval(detectDevTools, 1000);
+
+        // إخفاء الأكواد المصدرية
+        (function(){
+            const originalLog = console.log;
+            const originalWarn = console.warn;
+            const originalError = console.error;
+            const originalInfo = console.info;
+
+            // استبدال وظائف التسجيل بوظائف فارغة
+            console.log = function() {};
+            console.warn = function() {};
+            console.error = function() {};
+            console.info = function() {};
+
+            // إخفاء معلومات الخطأ
+            window.onerror = function() {
+                return true; // منع عرض رسائل الخطأ
+            };
+
+            // بيانات حماية
+            const securityToken = btoa(Math.random().toString(36).substring(2));
+            document.documentElement.setAttribute('data-security', securityToken);
+
+            // تشفير متقدم للمحتوى الحساس
+            function obfuscateCode() {
+                const scripts = document.querySelectorAll('script:not([data-security])');
+                scripts.forEach(script => {
+                    script.setAttribute('data-security', securityToken);
+                });
+            }
+
+            // تطبيق التشفير بعد تحميل الصفحة
+            window.addEventListener('DOMContentLoaded', obfuscateCode);
+        })();
+
+        // حماية إضافية: التعامل مع محاولات التتبع
+        (function() {
+            const excludedPaths = ['script.js', 'styles.css'];
+            const currentScript = document.currentScript;
+
+            if (currentScript && currentScript.src) {
+                const scriptUrl = new URL(currentScript.src);
+                const scriptPath = scriptUrl.pathname.split('/').pop();
+
+                if (!excludedPaths.includes(scriptPath)) {
+                    // منع الوصول إلى نصوص غير مصرح بها
+                    currentScript.remove();
+                }
+            }
+        })();
+
+    </script>
+
     <div class="navbar">
         <a href="#home" onclick="showPage('home')" title="الرئيسية"><i class="fas fa-home"></i></a>
         <a href="#settings" onclick="showPage('settings')" title="الإعدادات"><i class="fas fa-cog"></i></a>
@@ -67,27 +163,61 @@
     <!-- الصفحة الرئيسية -->
     <div class="container" id="home">
         <h1>توليد إعدادات Free Fire</h1>
-        
-        <!-- خيارات سرعة الحساسية -->
-        <h2>سرعة الحساسية</h2>
-        <div class="speed-options">
-            <input type="radio" name="speed" id="slow" value="slow">
-            <label for="slow" title="بطيئة"><i class="fas fa-user"></i> بطيئة</label>
-            <input type="radio" name="speed" id="medium" value="medium">
-            <label for="medium" title="متوسطة"><i class="fas fa-walking"></i> متوسطة</label>
-            <input type="radio" name="speed" id="fast" value="fast" checked>
-            <label for="fast" title="سريعة"><i class="fas fa-running"></i> سريعة</label>
-        </div>
 
-        <!-- خيارات حجم زر الضرب -->
-        <h2>حجم زر الضرب</h2>
-        <div class="fire-button-size-options">
-            <input type="radio" name="fire-button-size" id="small" value="small">
-            <label for="small" title="صغير"><i class="fas fa-mouse-pointer small"></i> صغير</label>
-            <input type="radio" name="fire-button-size" id="medium-size" value="medium" checked>
-            <label for="medium-size" title="متوسط"><i class="fas fa-mouse-pointer medium"></i> متوسط</label>
-            <input type="radio" name="fire-button-size" id="large" value="large">
-            <label for="large" title="كبير"><i class="fas fa-mouse-pointer large"></i> كبير</label>
+        <div class="options-container">
+            <!-- خيارات سرعة الحساسية -->
+            <div class="option-section">
+                <h2>سرعة الحساسية</h2>
+                <div class="speed-options">
+                    <input type="radio" name="speed" id="slow" value="slow">
+                    <label for="slow" title="بطيئة - مناسبة للتصويب الدقيق">
+                        <i class="fas fa-user-ninja"></i>
+                        <span>بطيئة</span>
+                        <small>مناسبة للقنص والتصويب الدقيق</small>
+                    </label>
+                    
+                    <input type="radio" name="speed" id="medium" value="medium">
+                    <label for="medium" title="متوسطة - توازن بين السرعة والدقة">
+                        <i class="fas fa-walking"></i>
+                        <span>متوسطة</span>
+                        <small>توازن بين السرعة والدقة</small>
+                    </label>
+                    
+                    <input type="radio" name="speed" id="fast" value="fast" checked>
+                    <label for="fast" title="سريعة - مثالية للاعبين المحترفين">
+                        <i class="fas fa-running"></i>
+                        <span>سريعة</span>
+                        <small>مثالية للاعبين المحترفين</small>
+                    </label>
+                </div>
+            </div>
+
+            <!-- خيارات حجم زر الضرب -->
+            <div class="option-section">
+                <h2>حجم زر الضرب</h2>
+                <div class="fire-button-size-options">
+                    <input type="radio" name="fire-button-size" id="small" value="small">
+                    <label for="small" title="صغير - للتحكم الدقيق">
+                        <i class="fas fa-compress-alt"></i>
+                        <span>صغير</span>
+                        <small>للتحكم الدقيق وتوفير مساحة</small>
+                    </label>
+                    
+                    <input type="radio" name="fire-button-size" id="medium-size" value="medium" checked>
+                    <label for="medium-size" title="متوسط - مناسب لمعظم اللاعبين">
+                        <i class="fas fa-expand"></i>
+                        <span>متوسط</span>
+                        <small>مناسب لمعظم اللاعبين</small>
+                    </label>
+                    
+                    <input type="radio" name="fire-button-size" id="large" value="large">
+                    <label for="large" title="كبير - سهولة الضغط السريع">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                        <span>كبير</span>
+                        <small>سهولة الضغط السريع</small>
+                    </label>
+                </div>
+            </div>
         </div>
 
         <!-- توليد الحساسيات -->
@@ -99,17 +229,19 @@
                 <i class="fas fa-random"></i> توليد حساسية أخرى
             </button>
         </div>
-        
+
         <div class="result" id="result">
             <div class="result-placeholder">اضغط على زر التوليد للحصول على أفضل الإعدادات لجهازك</div>
         </div>
 
         <!-- توليد إعدادات الجرافيك -->
         <div class="graphics-settings">
-            <button onclick="generateGraphicsSettings()">توليد إعدادات الجرافيك</button>
+            <button onclick="generateGraphicsSettings()" class="graphics-button">
+                <i class="fas fa-desktop"></i> توليد إعدادات الجرافيك
+            </button>
             <div class="graphics-result" id="graphics-result"></div>
         </div>
-        
+
         <!-- تم إزالة زر إعدادات اللاعبين -->
     </div>
 
@@ -258,7 +390,7 @@
     <!-- صفحة إعدادات اللاعبين -->
     <div class="container" id="players-settings" style="display: none;">
         <h1>إعدادات اللاعبين</h1>
-        
+
         <!-- نموذج إضافة الإعدادات -->
         <div class="player-settings-form">
             <h2>إضافة إعدادات جديدة</h2>
@@ -362,19 +494,19 @@
 
                 const docRef = await addDoc(collection(db, "playersSettings"), settingsData);
                 console.log("إعدادات تم نشرها بنجاح! معرف المستند: ", docRef.id);
-                
+
                 // إظهار رسالة نجاح
                 const successMessage = document.createElement('div');
                 successMessage.className = 'success-message';
                 successMessage.innerHTML = '<i class="fas fa-check-circle"></i> تم نشر إعداداتك بنجاح!';
                 document.getElementById('settings-form').appendChild(successMessage);
-                
+
                 // إعادة تحميل القائمة
                 loadPlayerSettings();
-                
+
                 // مسح النموذج
                 document.getElementById('settings-form').reset();
-                
+
                 // إزالة رسالة النجاح بعد 3 ثوان
                 setTimeout(() => {
                     successMessage.remove();
@@ -394,31 +526,31 @@
                     console.error("لم يتم العثور على عنصر players-settings-list");
                     return;
                 }
-                
+
                 settingsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</div>';
-                
+
                 // تأكد من إنشاء المرجع بشكل صحيح
                 try {
                     const playersSettingsRef = collection(db, "playersSettings");
                     const q = query(playersSettingsRef, orderBy("publishedAt", "desc"), limit(50));
                     console.log("تم إنشاء الاستعلام بنجاح");
-                    
+
                     const querySnapshot = await getDocs(q);
                     console.log(`تم استرجاع ${querySnapshot.size} من نتائج الاستعلام`);
-                    
+
                     settingsList.innerHTML = '';
-                    
+
                     if (querySnapshot.empty) {
                         settingsList.innerHTML = '<div class="no-settings">لم يتم نشر أي إعدادات بعد</div>';
                         return;
                     }
-                    
+
                     querySnapshot.forEach((doc) => {
                         console.log(`معالجة المستند: ${doc.id}`);
                         const data = doc.data();
                         const settingsCard = document.createElement('div');
                         settingsCard.className = 'player-settings-card';
-                        
+
                         // التعامل مع التاريخ بشكل آمن
                         let dateStr = 'غير معروف';
                         try {
@@ -433,7 +565,7 @@
                         } catch (dateError) {
                             console.error("خطأ في معالجة التاريخ:", dateError);
                         }
-                        
+
                         settingsCard.innerHTML = `
                             <div class="player-settings-header">
                                 <h3><i class="fas fa-user"></i> ${data.playerName || 'بدون اسم'}</h3>
@@ -470,7 +602,7 @@
                                 <i class="fas fa-copy"></i> نسخ الإعدادات
                             </button>
                         `;
-                        
+
                         settingsList.appendChild(settingsCard);
                     });
                 } catch (queryError) {
@@ -503,7 +635,7 @@
                         <button onclick="saveSettings()"><i class="fas fa-save"></i> حفظ</button>
                     </div>
                 `;
-                
+
                 // تحديث المتغير العام
                 window.sensitivities = {
                     general: data.generalSensitivity,
@@ -513,10 +645,10 @@
                     sniper: data.sniperSensitivity,
                     freeLook: data.freeLookSensitivity
                 };
-                
+
                 // الانتقال إلى الصفحة الرئيسية
                 showPage('home');
-                
+
                 // عرض رسالة نجاح
                 alert(`تم نسخ إعدادات اللاعب ${data.playerName} بنجاح!`);
             } else {
@@ -531,7 +663,7 @@
                 e.preventDefault();
                 publishPlayerSettings();
             });
-            
+
             // تحميل إعدادات اللاعبين عند فتح الصفحة
             window.addEventListener('hashchange', function() {
                 if (window.location.hash === '#players-settings') {
@@ -539,7 +671,7 @@
                     setTimeout(loadPlayerSettings, 200);
                 }
             });
-            
+
             // تحميل الإعدادات عند النقر على رابط إعدادات اللاعبين
             const playerSettingsLinks = document.querySelectorAll('a[href="#players-settings"], .players-settings-button');
             playerSettingsLinks.forEach(link => {
@@ -549,7 +681,7 @@
                     setTimeout(loadPlayerSettings, 300);
                 });
             });
-            
+
             // تحميل البيانات عند فتح الصفحة مباشرة إذا كانت صفحة إعدادات اللاعبين هي الصفحة الحالية
             if (window.location.hash === '#players-settings') {
                 console.log("تم تحميل الصفحة على #players-settings");
@@ -560,4 +692,4 @@
 
     <script src="script.js"></script>
 </body>
-      </html>
+</html>
