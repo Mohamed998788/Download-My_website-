@@ -3,11 +3,13 @@ body {
     font-family: 'Tajawal', sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #1a237e, #4a148c);
+    background: linear-gradient(135deg, #1a237e, #4a148c, #311b92);
     color: #fff;
-    transition: background 0.5s ease, color 0.5s ease;
+    transition: all 0.5s ease;
     background-size: 400% 400%;
-    animation: gradientAnimation 15s ease infinite;
+    animation: gradientAnimation 20s ease infinite;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 @keyframes gradientAnimation { 
@@ -17,42 +19,42 @@ body {
 }
 
 .container {
-    padding: 20px;
+    padding: 25px;
     max-width: 800px;
     margin: 0 auto 120px;
     animation: fadeIn 1s ease-in-out;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h1, h2 {
     text-align: center;
-    margin-bottom: 30px;
-    animation: slideIn 0.5s ease-in-out;
+    margin-bottom: 35px;
+    animation: slideIn 0.6s ease-in-out;
     position: relative;
-}
-
-h1 {
-    font-size: 2.5rem;
-    color: #ffdd57;
-    text-shadow: 0 0 15px rgba(255, 221, 87, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     letter-spacing: 1px;
 }
 
-h1::after {
+h1::after, h2::after {
     content: '';
     position: absolute;
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
+    width: 60px;
     height: 3px;
     background: linear-gradient(90deg, transparent, #ffdd57, transparent);
     border-radius: 3px;
-    animation: pulseWidth 2s infinite ease-in-out;
+    animation: widthPulse 2s infinite ease-in-out;
 }
 
-@keyframes pulseWidth {
-    0%, 100% { width: 80px; opacity: 0.7; }
-    50% { width: 150px; opacity: 1; }
+@keyframes widthPulse {
+    0%, 100% { width: 60px; opacity: 0.7; }
+    50% { width: 120px; opacity: 1; }
 }
 
 /* التأثيرات والرسوم المتحركة */
@@ -2513,4 +2515,164 @@ input[type="number"]::-webkit-inner-spin-button {
 
 input[type="number"] {
     -moz-appearance: textfield;
+    /* تصميم خيارات الجيروسكوب */
+}
+.gyro-options {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease-in-out;
+    position: relative;
+}
+
+.gyro-options::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, rgba(240, 165, 0, 0.5), transparent);
+    border-radius: 5px;
+}
+
+.gyro-options::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, rgba(240, 165, 0, 0.5), transparent);
+    border-radius: 5px;
+}
+
+.gyro-options label {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+    width: 120px;
+    height: 150px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(240, 165, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0 5px;
+}
+
+.gyro-options label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #f0a500, transparent);
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+}
+
+.gyro-options label:hover::before {
+    transform: scaleX(1);
+}
+
+.gyro-options label:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(240, 165, 0, 0.15);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25), 0 8px 15px rgba(240, 165, 0, 0.3);
+    border-color: rgba(240, 165, 0, 0.5);
+}
+
+.gyro-options label i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #f0a500;
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 2px 5px rgba(240, 165, 0, 0.5));
+    animation: rotateGyro 3s ease-in-out infinite;
+}
+
+@keyframes rotateGyro {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.gyro-options label:hover i {
+    transform: scale(1.2);
+    filter: drop-shadow(0 5px 10px rgba(240, 165, 0, 0.7));
+}
+
+.gyro-options label span {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+    color: #fff;
+}
+
+.gyro-options label small {
+    display: block;
+    font-size: 0.75rem;
+    opacity: 0.8;
+    margin-top: 5px;
+    max-width: 100%;
+    line-height: 1.2;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.gyro-options input[type="radio"] {
+    display: none;
+}
+
+.gyro-options input[type="radio"]:checked + label {
+    background: linear-gradient(135deg, rgba(240, 165, 0, 0.3), rgba(0, 0, 0, 0.5));
+    border-color: #f0a500;
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(240, 165, 0, 0.4);
+}
+
+.gyro-options input[type="radio"]:checked + label::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #fff;
+    background: rgba(240, 165, 0, 0.8);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    animation: fadeIn 0.3s ease-in;
+}
+
+/* تحسينات للأجهزة المحمولة */
+@media (max-width: 768px) {
+    .gyro-options {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .gyro-options label {
+        width: 90%;
+        max-width: 280px;
+        height: 120px;
+    }
 }
