@@ -136,6 +136,7 @@
         <a href="#user-guide" onclick="showPage('user-guide')"><i class="fas fa-book"></i> دليل المستخدم</a>
         <a href="#about" onclick="showPage('about')"><i class="fas fa-info-circle"></i> حول الموقع</a>
         <a href="#players-settings" onclick="showPage('players-settings')" class="players-settings-link"><i class="fas fa-users-cog"></i> إعدادات اللاعبين</a>
+        <a href="#pubg-settings" onclick="showPage('pubg-settings')"><i class="fas fa-gamepad"></i> إعدادات ببجي موبايل</a>
     </div>
 
     <!-- صفحة تحميل التطبيق -->
@@ -442,6 +443,89 @@
                     <i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- إضافة صفحة إعدادات ببجي موبايل -->
+    <div class="container" id="pubg-settings" style="display: none;">
+        <h1>توليد إعدادات PUBG Mobile</h1>
+
+        <div class="options-container">
+            <!-- خيارات سرعة الحساسية لببجي -->
+            <div class="option-section">
+                <h2>سرعة الحساسية</h2>
+                <div class="speed-options">
+                    <input type="radio" name="pubg-speed" id="pubg-slow" value="slow">
+                    <label for="pubg-slow" title="بطيئة - مناسبة للقنص">
+                        <i class="fas fa-user-ninja"></i>
+                        <span>بطيئة</span>
+                        <small>مناسبة للقنص والتصويب الدقيق</small>
+                    </label>
+                    
+                    <input type="radio" name="pubg-speed" id="pubg-medium" value="medium">
+                    <label for="pubg-medium" title="متوسطة - توازن بين السرعة والدقة">
+                        <i class="fas fa-walking"></i>
+                        <span>متوسطة</span>
+                        <small>توازن بين السرعة والدقة</small>
+                    </label>
+                    
+                    <input type="radio" name="pubg-speed" id="pubg-fast" value="fast" checked>
+                    <label for="pubg-fast" title="سريعة - مثالية للاعبين المحترفين">
+                        <i class="fas fa-running"></i>
+                        <span>سريعة</span>
+                        <small>مثالية للاعبين المحترفين</small>
+                    </label>
+                </div>
+            </div>
+
+            <!-- خيارات الجيروسكوب -->
+            <div class="option-section">
+                <h2>إعدادات الجيروسكوب</h2>
+                <div class="gyro-options">
+                    <input type="radio" name="gyro" id="gyro-off" value="off">
+                    <label for="gyro-off" title="بدون جيروسكوب">
+                        <i class="fas fa-times-circle"></i>
+                        <span>إيقاف</span>
+                        <small>اللعب بدون جيروسكوب</small>
+                    </label>
+                    
+                    <input type="radio" name="gyro" id="gyro-scope" value="scope" checked>
+                    <label for="gyro-scope" title="جيروسكوب عند التصويب">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>تصويب فقط</span>
+                        <small>تفعيل عند استخدام المناظير</small>
+                    </label>
+                    
+                    <input type="radio" name="gyro" id="gyro-full" value="full">
+                    <label for="gyro-full" title="جيروسكوب دائم">
+                        <i class="fas fa-sync"></i>
+                        <span>دائم</span>
+                        <small>تفعيل في جميع الأوقات</small>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- توليد الحساسيات -->
+        <div class="generate-buttons-container">
+            <button id="generate-pubg-sensitivity" onclick="calculatePubgSensitivity()" class="pulse-effect">
+                <i class="fas fa-magic"></i> توليد حساسيات ببجي
+            </button>
+            <button id="generate-random-pubg" onclick="generateRandomPubgSensitivity()" style="margin-top: 15px;">
+                <i class="fas fa-random"></i> توليد حساسية أخرى
+            </button>
+        </div>
+
+        <div class="result" id="pubg-result">
+            <div class="result-placeholder">اضغط على زر التوليد للحصول على أفضل إعدادات ببجي</div>
+        </div>
+
+        <!-- إعدادات الجرافيك -->
+        <div class="graphics-settings">
+            <button onclick="generatePubgGraphicsSettings()" class="graphics-button">
+                <i class="fas fa-desktop"></i> توليد إعدادات الجرافيك
+            </button>
+            <div class="graphics-result" id="pubg-graphics-result"></div>
         </div>
     </div>
 
