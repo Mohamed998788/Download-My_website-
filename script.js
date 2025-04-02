@@ -1236,3 +1236,152 @@
                 chatBox.scrollTop = chatBox.scrollHeight;
             }
         }
+
+// توليد حساسيات ببجي موبايل
+function calculatePubgSensitivity() {
+    const speed = document.querySelector('input[name="pubg-speed"]:checked').value;
+    const gyro = document.querySelector('input[name="gyro"]:checked').value;
+    
+    let sensitivities = {
+        camera: 0,
+        ads: 0,
+        scope3x: 0,
+        scope4x: 0,
+        scope6x: 0,
+        scope8x: 0,
+        gyroScope3x: 0,
+        gyroScope4x: 0,
+        gyroScope6x: 0,
+        gyroScope8x: 0
+    };
+
+    // تعيين الحساسيات بناءً على السرعة المختارة
+    if (speed === "fast") {
+        sensitivities = {
+            camera: Math.floor(Math.random() * (300 - 250) + 250),
+            ads: Math.floor(Math.random() * (150 - 120) + 120),
+            scope3x: Math.floor(Math.random() * (60 - 45) + 45),
+            scope4x: Math.floor(Math.random() * (45 - 35) + 35),
+            scope6x: Math.floor(Math.random() * (35 - 25) + 25),
+            scope8x: Math.floor(Math.random() * (25 - 20) + 20),
+            gyroScope3x: Math.floor(Math.random() * (400 - 300) + 300),
+            gyroScope4x: Math.floor(Math.random() * (350 - 250) + 250),
+            gyroScope6x: Math.floor(Math.random() * (250 - 200) + 200),
+            gyroScope8x: Math.floor(Math.random() * (200 - 150) + 150)
+        };
+    } else if (speed === "medium") {
+        sensitivities = {
+            camera: Math.floor(Math.random() * (250 - 200) + 200),
+            ads: Math.floor(Math.random() * (120 - 90) + 90),
+            scope3x: Math.floor(Math.random() * (45 - 35) + 35),
+            scope4x: Math.floor(Math.random() * (35 - 25) + 25),
+            scope6x: Math.floor(Math.random() * (25 - 20) + 20),
+            scope8x: Math.floor(Math.random() * (20 - 15) + 15),
+            gyroScope3x: Math.floor(Math.random() * (300 - 200) + 200),
+            gyroScope4x: Math.floor(Math.random() * (250 - 150) + 150),
+            gyroScope6x: Math.floor(Math.random() * (200 - 150) + 150),
+            gyroScope8x: Math.floor(Math.random() * (150 - 100) + 100)
+        };
+    } else {
+        sensitivities = {
+            camera: Math.floor(Math.random() * (200 - 150) + 150),
+            ads: Math.floor(Math.random() * (90 - 60) + 60),
+            scope3x: Math.floor(Math.random() * (35 - 25) + 25),
+            scope4x: Math.floor(Math.random() * (25 - 20) + 20),
+            scope6x: Math.floor(Math.random() * (20 - 15) + 15),
+            scope8x: Math.floor(Math.random() * (15 - 10) + 10),
+            gyroScope3x: Math.floor(Math.random() * (200 - 150) + 150),
+            gyroScope4x: Math.floor(Math.random() * (150 - 100) + 100),
+            gyroScope6x: Math.floor(Math.random() * (150 - 100) + 100),
+            gyroScope8x: Math.floor(Math.random() * (100 - 50) + 50)
+        };
+    }
+
+    displayPubgSensitivities(sensitivities, gyro);
+}
+
+function displayPubgSensitivities(sensitivities, gyro) {
+    const resultDiv = document.getElementById('pubg-result');
+    let html = `
+        <div>حساسية الكاميرا: ${sensitivities.camera}</div>
+        <div>حساسية ADS: ${sensitivities.ads}</div>
+        <div>حساسية منظار 3x: ${sensitivities.scope3x}</div>
+        <div>حساسية منظار 4x: ${sensitivities.scope4x}</div>
+        <div>حساسية منظار 6x: ${sensitivities.scope6x}</div>
+        <div>حساسية منظار 8x: ${sensitivities.scope8x}</div>
+    `;
+
+    if (gyro !== 'off') {
+        html += `
+            <div>جيروسكوب منظار 3x: ${sensitivities.gyroScope3x}</div>
+            <div>جيروسكوب منظار 4x: ${sensitivities.gyroScope4x}</div>
+            <div>جيروسكوب منظار 6x: ${sensitivities.gyroScope6x}</div>
+            <div>جيروسكوب منظار 8x: ${sensitivities.gyroScope8x}</div>
+        `;
+    }
+
+    html += `
+        <div class="action-buttons">
+            <button onclick="sharePubgSensitivity()"><i class="fas fa-share"></i> مشاركة</button>
+            <button onclick="savePubgSettings()"><i class="fas fa-save"></i> حفظ</button>
+        </div>
+    `;
+
+    resultDiv.innerHTML = html;
+    resultDiv.classList.add('fade-in');
+}
+
+function generatePubgGraphicsSettings() {
+    const graphicsResult = document.getElementById('pubg-graphics-result');
+    const settings = {
+        'صيغة الرسومات': ['HDR', 'Ultra HD', 'HD'][Math.floor(Math.random() * 3)],
+        'نمط اللون': ['واقعي', 'مشرق'][Math.floor(Math.random() * 2)],
+        'معدل الإطارات': ['عالي', 'متوسط', 'منخفض'][Math.floor(Math.random() * 3)],
+        'الظلال': ['متوسط', 'منخفض'][Math.floor(Math.random() * 2)],
+        'مكافحة التشويش': ['تشغيل', 'إيقاف'][Math.floor(Math.random() * 2)],
+        'التكيف التلقائي للجودة': ['تشغيل', 'إيقاف'][Math.floor(Math.random() * 2)]
+    };
+
+    let html = '';
+    for (let setting in settings) {
+        html += `<div><span>${setting}:</span> <span>${settings[setting]}</span></div>`;
+    }
+
+    graphicsResult.innerHTML = html;
+    graphicsResult.classList.add('fade-in');
+}
+
+function generateRandomPubgSensitivity() {
+    calculatePubgSensitivity();
+}
+
+function sharePubgSensitivity() {
+    const settings = document.getElementById('pubg-result').innerText;
+    if (navigator.share) {
+        navigator.share({
+            title: 'حساسيات PUBG Mobile',
+            text: settings
+        }).catch(console.error);
+    } else {
+        navigator.clipboard.writeText(settings).then(() => {
+            alert("تم نسخ الإعدادات إلى الحافظة!");
+        }).catch(() => {
+            alert("حدث خطأ أثناء نسخ الإعدادات!");
+        });
+    }
+}
+
+function savePubgSettings() {
+    const settings = document.getElementById('pubg-result').innerHTML;
+    const graphics = document.getElementById('pubg-graphics-result').innerHTML;
+    const savedSettings = JSON.parse(localStorage.getItem('savedPubgSettings') || '[]');
+    
+    savedSettings.push({
+        date: new Date().toLocaleString(),
+        settings: settings,
+        graphics: graphics
+    });
+    
+    localStorage.setItem('savedPubgSettings', JSON.stringify(savedSettings));
+    alert('تم حفظ إعدادات ببجي بنجاح!');
+}
