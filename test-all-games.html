@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار جميع الألعاب - RED SETTINGS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .game-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .game-section h2 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #007AFF, #0051D5);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: scale(1.05);
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+        
+        .results {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .status.success {
+            background: #28a745;
+        }
+        
+        .status.error {
+            background: #dc3545;
+        }
+        
+        .status.warning {
+            background: #ffc107;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 اختبار جميع الألعاب</h1>
+        
+        <!-- Free Fire -->
+        <div class="game-section">
+            <h2>🔥 Free Fire</h2>
+            <button onclick="testFreeFire()">اختبار Free Fire</button>
+            <div id="ff-results" class="results" style="display: none;"></div>
+        </div>
+        
+        <!-- PUBG Mobile -->
+        <div class="game-section">
+            <h2>🎯 PUBG Mobile</h2>
+            <button onclick="testPUBG()">اختبار PUBG Mobile</button>
+            <div id="pubg-results" class="results" style="display: none;"></div>
+        </div>
+        
+        <!-- Call of Duty Mobile -->
+        <div class="game-section">
+            <h2>⚔️ Call of Duty Mobile</h2>
+            <button onclick="testCOD()">اختبار Call of Duty Mobile</button>
+            <div id="cod-results" class="results" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { sensitivityEngine } from './src/utils/sensitivity-engine.js';
+        
+        window.sensitivityEngine = sensitivityEngine;
+        
+        window.testFreeFire = function() {
+            const resultsDiv = document.getElementById('ff-results');
+            resultsDiv.style.display = 'block';
+            
+            try {
+                const result = sensitivityEngine.generateSensitivity('medium', 'medium');
+                const sens = result.sensitivities;
+                
+                let output = '<span class="status success">✅ نجح</span>\n\n';
+                output += '📊 الحساسيات:\n';
+                output += `• حساسية عامة: ${sens.general}\n`;
+                output += `• النقطة الحمراء: ${sens.redDot}\n`;
+                output += `• سكوب 2x: ${sens.scope2x}\n`;
+                output += `• سكوب 4x: ${sens.scope4x}\n`;
+                output += `• القناصة: ${sens.sniper}\n`;
+                output += `• النظر الحر: ${sens.freeLook}\n`;
+                output += `• زر الضرب: ${sens.fireButtonSize}\n\n`;
+                
+                // التحقق من عدم وجود جيروسكوب
+                if (sens.gyroscope) {
+                    output += '<span class="status error">❌ خطأ: Free Fire يحتوي على جيروسكوب!</span>\n';
+                } else {
+                    output += '<span class="status success">✅ صحيح: لا يوجد جيروسكوب</span>\n';
+                }
+                
+                resultsDiv.innerHTML = output;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">❌ فشل</span>\n\n${error.message}`;
+            }
+        };
+        
+        window.testPUBG = function() {
+            const resultsDiv = document.getElementById('pubg-results');
+            resultsDiv.style.display = 'block';
+            
+            try {
+                const result = sensitivityEngine.generatePUBGSensitivity('medium', 'scope');
+                const sens = result.sensitivities;
+                
+                let output = '<span class="status success">✅ نجح</span>\n\n';
+                output += '📊 الحساسيات:\n';
+                output += `• الكاميرا TPP: ${sens.camera_tpp}%\n`;
+                output += `• الكاميرا FPP: ${sens.camera_fpp}%\n`;
+                output += `• ADS: ${sens.ads}%\n`;
+                output += `• نقطة حمراء: ${sens.scope_redDot}%\n`;
+                output += `• سكوب 2x: ${sens.scope_2x}%\n`;
+                output += `• سكوب 3x: ${sens.scope_3x}%\n`;
+                output += `• سكوب 4x: ${sens.scope_4x}%\n`;
+                output += `• سكوب 6x: ${sens.scope_6x}%\n`;
+                output += `• سكوب 8x: ${sens.scope_8x}%\n`;
+                output += `• النظرة الحرة: ${sens.free_look}%\n`;
+                output += `• الركض: ${sens.sprint}%\n\n`;
+                
+                output += '🎯 الجيروسكوب:\n';
+                output += `• جيرو - الكاميرا: ${sens.gyro_camera}%\n`;
+                output += `• جيرو - ADS: ${sens.gyro_ads}%\n`;
+                output += `• جيرو - سكوب 3x: ${sens.gyro_scope_3x}%\n`;
+                output += `• جيرو - سكوب 4x: ${sens.gyro_scope_4x}%\n`;
+                output += `• جيرو - سكوب 6x: ${sens.gyro_scope_6x}%\n`;
+                output += `• جيرو - سكوب 8x: ${sens.gyro_scope_8x}%\n\n`;
+                
+                // التحقق من النطاقات
+                let allValid = true;
+                if (sens.camera_tpp < 50 || sens.camera_tpp > 300) allValid = false;
+                if (sens.ads < 30 || sens.ads > 200) allValid = false;
+                
+                if (allValid) {
+                    output += '<span class="status success">✅ جميع القيم في النطاق الصحيح</span>\n';
+                } else {
+                    output += '<span class="status warning">⚠️ بعض القيم خارج النطاق</span>\n';
+                }
+                
+                resultsDiv.innerHTML = output;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">❌ فشل</span>\n\n${error.message}`;
+            }
+        };
+        
+        window.testCOD = function() {
+            const resultsDiv = document.getElementById('cod-results');
+            resultsDiv.style.display = 'block';
+            
+            try {
+                const result = sensitivityEngine.generateCODSensitivity('distance', 'standard', 'on', null);
+                const sens = result.sensitivities;
+                
+                let output = '<span class="status success">✅ نجح</span>\n\n';
+                output += '📊 الحساسيات:\n';
+                output += `• وضع التدوير: ${sens.rotation_mode}\n`;
+                output += `• الكاميرا (قياسية): ${sens.camera_standard}%\n`;
+                output += `• الكاميرا ADS: ${sens.camera_ads}%\n`;
+                output += `• القناص: ${sens.camera_sniper}%\n\n`;
+                
+                output += '🔭 السكوبات:\n';
+                output += `• تكتيكي: ${sens.scope_tactical}%\n`;
+                output += `• 3x: ${sens.scope_3x}%\n`;
+                output += `• 4x: ${sens.scope_4x}%\n`;
+                output += `• 6x: ${sens.scope_6x}%\n`;
+                output += `• 8x: ${sens.scope_8x}%\n\n`;
+                
+                output += '🔫 الإطلاق:\n';
+                output += `• قياسي: ${sens.firing_standard}%\n`;
+                output += `• ADS: ${sens.firing_ads}%\n`;
+                output += `• قناص: ${sens.firing_sniper}%\n`;
+                output += `• التدوير العمودي: ${sens.vertical_turn}%\n\n`;
+                
+                output += '📱 الجيروسكوب:\n';
+                output += `• عام: ${sens.gyro_general}%\n`;
+                output += `• ADS: ${sens.gyro_ads}%\n`;
+                output += `• قناص: ${sens.gyro_sniper}%\n\n`;
+                
+                output += `🚗 المركبات: ${sens.vehicle}%\n\n`;
+                
+                // التحقق من النطاقات
+                let allValid = true;
+                if (sens.camera_standard < 30 || sens.camera_standard > 200) allValid = false;
+                if (sens.camera_ads < 40 || sens.camera_ads > 250) allValid = false;
+                
+                if (allValid) {
+                    output += '<span class="status success">✅ جميع القيم في النطاق الصحيح</span>\n';
+                } else {
+                    output += '<span class="status warning">⚠️ بعض القيم خارج النطاق</span>\n';
+                }
+                
+                resultsDiv.innerHTML = output;
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="status error">❌ فشل</span>\n\n${error.message}`;
+            }
+        };
+        
+        console.log('✅ صفحة الاختبار جاهزة!');
+    </script>
+</body>
+</html>

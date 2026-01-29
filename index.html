@@ -4,2327 +4,657 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#000000">
+    <meta name="description" content="محرك ذكي لتوليد إعدادات الحساسية المثالية للألعاب - Free Fire, PUBG Mobile, Call of Duty Mobile">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>RED SETTINGS - Free Fire</title>
+    <title>RED SETTINGS v3.0 - Professional Gaming Settings</title>
+    
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="src/styles/ios-theme.css">
-    <link rel="stylesheet" href="src/styles/cards.css">
-    <style>
-        /* Mobile & performance overrides */
-        @media (max-width: 480px), (prefers-reduced-motion: reduce) {
-            body { animation: none !important; background-size: cover !important; }
-            .ios-container, .ios-card, .ios-button { animation: none !important; transition-duration: 0.01ms !important; }
-        }
-    </style>
+    
+    <!-- Engine -->
+    <script type="module" src="src/bridge.js"></script>
 </head>
 <body>
-    <!-- Header -->
-    <div class="ios-container" id="header-container" style="position:relative;">
-        <h1>RED SETTINGS</h1>
-        <p style="text-align: center; color: rgba(255,255,255,0.7); margin-top: -20px;">توليد إعدادات Free Fire الذكية</p>
-        <div style="display:flex; gap:8px; justify-content:center; margin-top:10px;">
-            <button class="ios-button" onclick="openAdvancedTuning()" style="font-size:13px; padding:8px 12px;">⚙️ إعدادات متقدمة</button>
-            <button class="ios-button" onclick="openPresetManager()" style="font-size:13px; padding:8px 12px;">📦 Presets</button>
-        </div>
+    <!-- Top Action Buttons -->
+    <div class="get-app-button" onclick="alert('قريباً - التطبيق قيد التطوير')">
+        <i class="fas fa-download"></i>
+    </div>
+    
+    <div class="translation-button" onclick="alert('قريباً - خدمة الترجمة')">
+        <i class="fas fa-language"></i>
     </div>
 
-    <!-- الصفحة الرئيسية - Free Fire -->
-    <div class="ios-container page-section active" id="page-freefire">
-        <h2><i class="fas fa-gamepad"></i> Free Fire</h2>
-        
-        <!-- إعدادات الحساسية -->
-        <div class="ios-card">
-            <h3 style="margin-bottom: 15px;"><i class="fas fa-sliders-h"></i> إعدادات الحساسية</h3>
-            
-            <!-- اختيار المحاكي -->
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 10px; color: rgba(255,255,255,0.8);">المحاكي (اختياري)</label>
-                <select id="emulator-select" onchange="updateEmulatorInfo()" style="width: 100%; padding: 12px 15px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: inherit; font-size: 14px;">
-                    <option value="">🚫 بدون محاكي - جهاز حقيقي</option>
-                    <optgroup label="Windows">
-                        <option value="MSI App Player (Windows)">⚡ MSI App Player</option>
-                        <option value="BlueStacks (Windows)">🔵 BlueStacks</option>
-                        <option value="LDPlayer (Windows)">🟢 LDPlayer</option>
-                        <option value="Nox Player (Windows)">🟣 Nox Player</option>
-                        <option value="MEmu Play (Windows)">🔴 MEmu Play</option>
-                        <option value="GameLoop (Windows)">🎮 GameLoop</option>
-                        <option value="Smart Gaga (Windows)">⭐ Smart Gaga</option>
-                    </optgroup>
-                    <optgroup label="Linux">
-                        <option value="Waydroid (Linux)">🐧 Waydroid</option>
-                        <option value="Anbox (Linux)">📦 Anbox</option>
-                    </optgroup>
-                    <optgroup label="macOS">
-                        <option value="BlueStacks (macOS)">🔵 BlueStacks (Mac)</option>
-                        <option value="Nox Player (macOS)">🟣 Nox Player (Mac)</option>
-                    </optgroup>
-                    <optgroup label="Multi-OS">
-                        <option value="Genymotion">🔧 Genymotion</option>
-                        <option value="Phoenix OS">💜 Phoenix OS</option>
-                        <option value="Prime OS">⚔️ Prime OS</option>
-                    </optgroup>
-                </select>
-                <div id="emulator-info" style="margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.6); display: none;">
-                    <i class="fas fa-info-circle"></i> <span id="emulator-info-text"></span>
-                </div>
-
-                <!-- Emulator specific tuning (visible when user selects an emulator) -->
-                <div id="ff-emulator-settings" style="display:none; margin-top:12px;">
-                    <h4 style="margin:6px 0;">إعدادات المحاكي (تقدم دقيق)</h4>
-                    <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
-                        <label style="font-size:12px; color:rgba(255,255,255,0.8); margin-right:6px;">Preset</label>
-                        <select id="ff-emulator-preset" onchange="applyEmuPreset('ff', this.value)" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;">
-                            <option value="">-- اختياري --</option>
-                            <option value="BlueStacks">BlueStacks</option>
-                            <option value="LDPlayer">LDPlayer</option>
-                        </select>
-                    </div>
-                    <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:8px;">
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Emulator DPI</label>
-                            <input id="ff-emulator-dpi" type="number" min="80" max="480" value="160" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Mouse DPI</label>
-                            <input id="ff-mouse-dpi" type="number" min="100" max="3200" value="800" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Polling Rate (Hz)</label>
-                            <select id="ff-polling-rate" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;">
-                                <option value="125">125</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
-                                <option value="1000">1000</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">X Sensitivity (0.1 - 3.0)</label>
-                            <input id="ff-x-sens" type="number" min="0.1" max="3" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Y Sensitivity (0.1 - 2.5)</label>
-                            <input id="ff-y-sens" type="number" min="0.1" max="2.5" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div style="grid-column:1 / -1; display:flex; gap:8px; align-items:center;">
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Tweaks (مثال: 16450)</label>
-                            <input id="ff-tweaks" type="text" placeholder="optional" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div style="grid-column:1 / -1; display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" id="ff-precision-mode" /> <label for="ff-precision-mode" style="font-size:12px; color:rgba(255,255,255,0.8);">Enable Precision Mode</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 15px; color: rgba(255,255,255,0.9); font-weight: 600;">🎮 أسلوب اللعب</label>
-                <div class="speed-cards-grid" id="ff-speed-container">
-                    <div class="speed-card" data-value="slow" onclick="selectSpeedCard(this, 'ff-speed')">
-                        <i class="fas fa-user-ninja"></i>
-                        <span>بطيء</span>
-                    </div>
-                    <div class="speed-card" data-value="medium" onclick="selectSpeedCard(this, 'ff-speed')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.1);" data-selected="true">
-                        <i class="fas fa-walking"></i>
-                        <span>متوسط</span>
-                    </div>
-                    <div class="speed-card" data-value="fast" onclick="selectSpeedCard(this, 'ff-speed')">
-                        <i class="fas fa-running"></i>
-                        <span>سريع</span>
-                    </div>
-                    <div class="speed-card" data-value="proSniper" onclick="selectSpeedCard(this, 'ff-speed')">
-                        <i class="fas fa-bullseye"></i>
-                        <span>قناص</span>
-                    </div>
-                    <div class="speed-card" data-value="aggressive" onclick="selectSpeedCard(this, 'ff-speed')">
-                        <i class="fas fa-fire"></i>
-                        <span>عدواني</span>
-                    </div>
-                    <div class="speed-card" data-value="tactical" onclick="selectSpeedCard(this, 'ff-speed')">
-                        <i class="fas fa-chess"></i>
-                        <span>تكتيكي</span>
-                    </div>
-                </div>
-                <input type="hidden" id="ff-speed" name="ff-speed" value="medium">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 15px; color: rgba(255,255,255,0.9); font-weight: 600;">📱 حجم زر الضرب</label>
-                <div class="speed-cards-grid" id="ff-fire-container" style="grid-template-columns: repeat(3, 1fr);">
-                    <div class="speed-card" data-value="small" onclick="selectSpeedCard(this, 'ff-fire')">
-                        <i class="fas fa-square" style="font-size: 24px;"></i>
-                        <span>صغير</span>
-                    </div>
-                    <div class="speed-card" data-value="medium" onclick="selectSpeedCard(this, 'ff-fire')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.1);" data-selected="true">
-                        <i class="fas fa-square" style="font-size: 32px;"></i>
-                        <span>متوسط</span>
-                    </div>
-                    <div class="speed-card" data-value="large" onclick="selectSpeedCard(this, 'ff-fire')">
-                        <i class="fas fa-square" style="font-size: 40px;"></i>
-                        <span>كبير</span>
-                    </div>
-                </div>
-                <input type="hidden" id="ff-fire" name="ff-fire" value="medium">
-            </div>
-
-            <button class="ios-button" onclick="generateFreeFireSensitivity()" style="width: 100%; justify-content: center;">
-                <i class="fas fa-magic"></i> توليد الحساسية
-            </button>
+    <!-- Hero Section -->
+    <div class="container" style="text-align: center; padding-top: 80px; padding-bottom: 50px;">
+        <div style="display: inline-block; padding: 10px 24px; background: rgba(255,255,255,0.08); border-radius: 25px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+            <span style="font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.9);">v3.0 Professional Edition</span>
         </div>
-
-        <!-- نتائج الحساسية -->
-        <div id="ff-sensitivity-results"></div>
-
-        <!-- إعدادات الجرافيك -->
-        <div class="ios-card">
-            <h3 style="margin-bottom: 15px;"><i class="fas fa-desktop"></i> إعدادات الجرافيك</h3>
-            <button class="ios-button" onclick="generateFreeFireGraphicsV2()" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #28a745, #34d058);">
-                <i class="fas fa-cog"></i> توليد إعدادات الجرافيك
-            </button>
-            <div id="ff-graphics-results"></div>
-        </div>
+        <h1 style="font-size: clamp(2.5rem, 7vw, 4.5rem); margin-bottom: 25px; font-weight: 800; line-height: 1.1;">RED SETTINGS</h1>
+        <p style="font-size: clamp(1rem, 2.5vw, 1.3rem); color: rgba(255,255,255,0.6); max-width: 700px; margin: 0 auto 40px; line-height: 1.7; font-weight: 400;">
+            محرك ذكي لتوليد إعدادات الحساسية المثالية<br>
+            <span style="font-size: 0.85em; color: rgba(255,255,255,0.5);">Free Fire • PUBG Mobile • Call of Duty Mobile</span>
+        </p>
     </div>
 
-    <!-- صفحة PUBG -->
-    <div class="ios-container page-section" id="page-pubg">
-        <h2><i class="fas fa-gamepad"></i> PUBG Mobile</h2>
-        
-        <div class="ios-card">
-            <h3 style="margin-bottom: 15px;"><i class="fas fa-sliders-h"></i> إعدادات الحساسية</h3>
-            
-            <!-- اختيار المحاكي -->
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 10px; color: rgba(255,255,255,0.8);">المحاكي (اختياري)</label>
-                <select id="pubg-emulator-select" onchange="updatePUBGEmulatorInfo()" style="width: 100%; padding: 12px 15px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: inherit; font-size: 14px;">
-                    <option value="">🚫 بدون محاكي - جهاز حقيقي</option>
-                    <optgroup label="Windows">
-                        <option value="MSI App Player (Windows)">⚡ MSI App Player</option>
-                        <option value="BlueStacks (Windows)">🔵 BlueStacks</option>
-                        <option value="LDPlayer (Windows)">🟢 LDPlayer</option>
-                        <option value="Nox Player (Windows)">🟣 Nox Player</option>
-                        <option value="MEmu Play (Windows)">🔴 MEmu Play</option>
-                        <option value="GameLoop (Windows)">🎮 GameLoop</option>
-                        <option value="Smart Gaga (Windows)">⭐ Smart Gaga</option>
-                    </optgroup>
-                    <optgroup label="Linux">
-                        <option value="Waydroid (Linux)">🐧 Waydroid</option>
-                        <option value="Anbox (Linux)">📦 Anbox</option>
-                    </optgroup>
-                    <optgroup label="macOS">
-                        <option value="BlueStacks (macOS)">🔵 BlueStacks (Mac)</option>
-                        <option value="Nox Player (macOS)">🟣 Nox Player (Mac)</option>
-                    </optgroup>
-                    <optgroup label="Multi-OS">
-                        <option value="Genymotion">🔧 Genymotion</option>
-                        <option value="Phoenix OS">💜 Phoenix OS</option>
-                        <option value="Prime OS">⚔️ Prime OS</option>
-                    </optgroup>
-                </select>
-                <div id="pubg-emulator-info" style="margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.6); display: none;">
-                    <i class="fas fa-info-circle"></i> <span id="pubg-emulator-info-text"></span>
-                </div>
-
-                <!-- PUBG emulator tuning -->
-                <div id="pubg-emulator-settings" style="display:none; margin-top:12px;">
-                    <h4 style="margin:6px 0;">إعدادات المحاكي (PUBG)</h4>
-                    <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
-                        <label style="font-size:12px; color:rgba(255,255,255,0.8); margin-right:6px;">Preset</label>
-                        <select id="pubg-emulator-preset" onchange="applyEmuPreset('pubg', this.value)" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;">
-                            <option value="">-- اختياري --</option>
-                            <option value="BlueStacks">BlueStacks</option>
-                            <option value="LDPlayer">LDPlayer</option>
-                        </select>
-                    </div>
-                    <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:8px;">
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Emulator DPI</label>
-                            <input id="pubg-emulator-dpi" type="number" min="80" max="480" value="160" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Mouse DPI</label>
-                            <input id="pubg-mouse-dpi" type="number" min="100" max="3200" value="800" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Polling Rate (Hz)</label>
-                            <select id="pubg-polling-rate" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;">
-                                <option value="125">125</option>
-                                <option value="250">250</option>
-                                <option value="500">500</option>
-                                <option value="1000">1000</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">X Sensitivity (0.1 - 3.0)</label>
-                            <input id="pubg-x-sens" type="number" min="0.1" max="3" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Y Sensitivity (0.1 - 2.5)</label>
-                            <input id="pubg-y-sens" type="number" min="0.1" max="2.5" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div style="grid-column:1 / -1; display:flex; gap:8px; align-items:center;">
-                            <label style="font-size:12px; color:rgba(255,255,255,0.8);">Tweaks (مثال: 21058)</label>
-                            <input id="pubg-tweaks" type="text" placeholder="optional" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                        </div>
-                        <div style="grid-column:1 / -1; display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" id="pubg-precision-mode" /> <label for="pubg-precision-mode" style="font-size:12px; color:rgba(255,255,255,0.8);">Enable Precision Mode</label>
-                        </div>
-                    </div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Free Fire Section -->
+        <div id="page-freefire" class="page-section active">
+            <!-- Game Header -->
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 15px; padding: 20px 40px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                    <i class="fas fa-fire" style="font-size: 32px; color: #ff6b35;"></i>
+                    <h2 style="margin: 0; font-size: 2rem; font-weight: 700;">Free Fire</h2>
                 </div>
             </div>
-            
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 15px; color: rgba(255,255,255,0.9); font-weight: 600;">🎮 أسلوب اللعب</label>
-                <div class="speed-cards-grid" id="pubg-speed-container">
-                    <div class="speed-card" data-value="slow" onclick="selectSpeedCard(this, 'pubg-speed')">
-                        <i class="fas fa-user-ninja"></i>
-                        <span>بطيء</span>
+
+            <!-- Settings Card -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-bottom: 40px; backdrop-filter: blur(15px);">
+                
+                <!-- Section Header -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sliders-h" style="font-size: 20px;"></i>
                     </div>
-                    <div class="speed-card" data-value="medium" onclick="selectSpeedCard(this, 'pubg-speed')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.1);" data-selected="true">
-                        <i class="fas fa-walking"></i>
-                        <span>متوسط</span>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الحساسية</h3>
+                </div>
+
+                <!-- Play Style Selection -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-gamepad" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">أسلوب اللعب</label>
                     </div>
-                    <div class="speed-card" data-value="fast" onclick="selectSpeedCard(this, 'pubg-speed')">
-                        <i class="fas fa-running"></i>
-                        <span>سريع</span>
+                    <div class="speed-options">
+                        <input type="radio" id="ff-slow" name="ff-speed" value="slow">
+                        <label for="ff-slow">
+                            <i class="fas fa-user-ninja"></i>
+                            <span>بطيء</span>
+                            <small>دقة عالية</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-medium" name="ff-speed" value="medium" checked>
+                        <label for="ff-medium">
+                            <i class="fas fa-walking"></i>
+                            <span>متوسط</span>
+                            <small>متوازن</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-fast" name="ff-speed" value="fast">
+                        <label for="ff-fast">
+                            <i class="fas fa-running"></i>
+                            <span>سريع</span>
+                            <small>استجابة فورية</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-proSniper" name="ff-speed" value="proSniper">
+                        <label for="ff-proSniper">
+                            <i class="fas fa-bullseye"></i>
+                            <span>قناص</span>
+                            <small>دقة قصوى</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-aggressive" name="ff-speed" value="aggressive">
+                        <label for="ff-aggressive">
+                            <i class="fas fa-fire"></i>
+                            <span>عدواني</span>
+                            <small>هجوم سريع</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-tactical" name="ff-speed" value="tactical">
+                        <label for="ff-tactical">
+                            <i class="fas fa-chess"></i>
+                            <span>تكتيكي</span>
+                            <small>تخطيط محكم</small>
+                        </label>
                     </div>
-                    <div class="speed-card" data-value="proSniper" onclick="selectSpeedCard(this, 'pubg-speed')">
-                        <i class="fas fa-bullseye"></i>
-                        <span>قناص</span>
+                </div>
+
+                <!-- Fire Button Size -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-hand-pointer" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">حجم زر الضرب</label>
                     </div>
-                    <div class="speed-card" data-value="aggressive" onclick="selectSpeedCard(this, 'pubg-speed')">
-                        <i class="fas fa-fire"></i>
-                        <span>عدواني</span>
-                    </div>
-                    <div class="speed-card" data-value="tactical" onclick="selectSpeedCard(this, 'pubg-speed')">
-                        <i class="fas fa-chess"></i>
-                        <span>تكتيكي</span>
-                    </div>
-                </div>
-                <input type="hidden" id="pubg-speed" name="pubg-speed" value="medium">
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 15px; color: rgba(255,255,255,0.9); font-weight: 600;">🎯 الجيروسكوب</label>
-                <div class="speed-cards-grid" style="grid-template-columns: repeat(3, 1fr);" id="pubg-gyro-container">
-                    <div class="speed-card" data-value="off" onclick="selectSpeedCard(this, 'pubg-gyro')">
-                        <i class="fas fa-power-off"></i>
-                        <span>مغلق</span>
-                    </div>
-                    <div class="speed-card" data-value="scope" onclick="selectSpeedCard(this, 'pubg-gyro')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.1);" data-selected="true">
-                        <i class="fas fa-crosshairs"></i>
-                        <span>تصويب فقط</span>
-                    </div>
-                    <div class="speed-card" data-value="full" onclick="selectSpeedCard(this, 'pubg-gyro')">
-                        <i class="fas fa-sync-alt"></i>
-                        <span>دائم</span>
+                    <div class="fire-button-size-options">
+                        <input type="radio" id="ff-fire-small" name="ff-fire" value="small">
+                        <label for="ff-fire-small">
+                            <i class="fas fa-square" style="font-size: 2rem;"></i>
+                            <span>صغير</span>
+                            <small>18-38</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-fire-medium" name="ff-fire" value="medium" checked>
+                        <label for="ff-fire-medium">
+                            <i class="fas fa-square" style="font-size: 2.5rem;"></i>
+                            <span>متوسط</span>
+                            <small>42-72</small>
+                        </label>
+                        
+                        <input type="radio" id="ff-fire-large" name="ff-fire" value="large">
+                        <label for="ff-fire-large">
+                            <i class="fas fa-square" style="font-size: 3rem;"></i>
+                            <span>كبير</span>
+                            <small>76-98</small>
+                        </label>
                     </div>
                 </div>
-                <input type="hidden" id="pubg-gyro" name="pubg-gyro" value="scope">
-            </div>
 
-            <button class="ios-button" onclick="generatePUBGSensitivity()" style="width: 100%; justify-content: center;">
-                <i class="fas fa-magic"></i> توليد حساسية PUBG
-            </button>
-        </div>
-
-        <div id="pubg-sensitivity-results"></div>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 15px;"><i class="fas fa-desktop"></i> إعدادات الجرافيك</h3>
-            <button class="ios-button" onclick="generatePUBGGraphics()" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #28a745, #34d058);">
-                <i class="fas fa-cog"></i> توليد إعدادات الجرافيك
-            </button>
-            <div id="pubg-graphics-results"></div>
-        </div>
-    </div>
-
-    <!-- صفحة Call of Duty Mobile -->
-    <div class="ios-container page-section" id="page-cod">
-        <h2><i class="fas fa-crosshairs"></i> Call of Duty Mobile</h2>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 12px;">وضع التدوير (Rotation Mode)</h3>
-            <div class="speed-cards-grid">
-                <div class="speed-card" data-value="fixed" onclick="selectSpeedCard(this, 'cod-rotation')">
-                    <i class="fas fa-arrows-alt"></i>
-                    <span>سرعة ثابتة</span>
-                </div>
-                <div class="speed-card" data-value="distance" onclick="selectSpeedCard(this, 'cod-rotation')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.08);" data-selected="true">
-                    <i class="fas fa-ruler-horizontal"></i>
-                    <span>تسارع المسافة</span>
-                </div>
-                <div class="speed-card" data-value="speed" onclick="selectSpeedCard(this, 'cod-rotation')">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>تسارع السرعة</span>
-                </div>
-            </div>
-            <input type="hidden" id="cod-rotation" name="cod-rotation" value="distance">
-        </div>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 12px;">حساسية الكاميرا</h3>
-            <p style="margin:0 0 10px 0; color: rgba(255,255,255,0.7); font-size:13px;">(قياسية، ADS، قناص، ومناظير)</p>
-            <div class="speed-cards-grid">
-                <div class="speed-card" data-value="standard" onclick="selectSpeedCard(this, 'cod-style')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.08);" data-selected="true">
-                    <i class="fas fa-walking"></i>
-                    <span>قياسية</span>
-                </div>
-                <div class="speed-card" data-value="sniper" onclick="selectSpeedCard(this, 'cod-style')">
-                    <i class="fas fa-bullseye"></i>
-                    <span>قناص</span>
-                </div>
-                <div class="speed-card" data-value="aggressive" onclick="selectSpeedCard(this, 'cod-style')">
-                    <i class="fas fa-fire"></i>
-                    <span>هجومي</span>
-                </div>
-            </div>
-            <input type="hidden" id="cod-style" name="cod-style" value="standard">
-        </div>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 12px;">حساسية الجيروسكوب</h3>
-            <div class="speed-cards-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="speed-card" data-value="off" onclick="selectSpeedCard(this, 'cod-gyro')">
-                    <i class="fas fa-power-off"></i>
-                    <span>إيقاف</span>
-                </div>
-                <div class="speed-card" data-value="on" onclick="selectSpeedCard(this, 'cod-gyro')" style="border-color: rgba(0,122,255,0.3); background: rgba(0,122,255,0.08);" data-selected="true">
-                    <i class="fas fa-mobile-alt"></i>
-                    <span>تشغيل</span>
-                </div>
-                <div class="speed-card" data-value="full" onclick="selectSpeedCard(this, 'cod-gyro')">
-                    <i class="fas fa-sync-alt"></i>
-                    <span>مكثف</span>
-                </div>
-            </div>
-            <input type="hidden" id="cod-gyro" name="cod-gyro" value="on">
-        </div>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 12px;">حساسية المركبات</h3>
-            <p style="margin:0 0 10px 0; color: rgba(255,255,255,0.7); font-size:13px;">اسحب لضبط حساسية المركبات (0 - 300)</p>
-            <input id="cod-vehicle-slider" type="range" min="0" max="300" value="150" style="width:100%">
-            <div style="display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,0.6); margin-top:6px;"><span>0</span><span>150</span><span>300</span></div>
-        </div>
-
-        <div class="ios-card">
-            <label style="font-size:13px; color:rgba(255,255,255,0.85); margin-bottom:6px; display:block;">محاكي (اختياري)</label>
-            <select id="cod-emulator-select" onchange="updateCODEmulatorInfo()" style="width: 100%; padding: 12px 15px; border-radius: 10px; border: none; background: rgba(255,255,255,0.05); color: white; font-family: inherit; font-size: 14px;">
-                <option value="">-- لا</option>
-                <option>BlueStacks (Windows)</option>
-                <option>LDPlayer (Windows)</option>
-                <option>Nox Player (Windows)</option>
-                <option>GameLoop (Windows)</option>
-                <option>MEmu Play (Windows)</option>
-                <option>MSI App Player (Windows)</option>
-                <option>Waydroid (Linux)</option>
-                <option>Anbox (Linux)</option>
-                <option>Genymotion</option>
-                <option>Phoenix OS</option>
-                <option>Prime OS</option>
-            </select>
-            <div id="cod-emulator-info" style="margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.6); display: none;">
-                <i class="fas fa-info-circle"></i> <span id="cod-emulator-info-text"></span>
-            </div>
-        </div>
-        <div class="ios-card">
-            <button class="ios-button" onclick="generateCODSensitivity()" style="width:100%; justify-content:center;"><i class="fas fa-magic"></i> توليد حساسية Call of Duty</button>
-        </div>
-
-        <!-- COD emulator tuning -->
-        <div id="cod-emulator-settings" style="display:none; margin-top:12px;">
-            <h4 style="margin:6px 0;">إعدادات المحاكي (CoD)</h4>
-            <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
-                <label style="font-size:12px; color:rgba(255,255,255,0.8); margin-right:6px;">Preset</label>
-                <select id="cod-emulator-preset" onchange="applyEmuPreset('cod', this.value)" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;">
-                    <option value="">-- اختياري --</option>
-                    <option value="BlueStacks">BlueStacks</option>
-                    <option value="LDPlayer">LDPlayer</option>
-                </select>
-            </div>
-            <div style="display:grid; grid-template-columns: repeat(2,1fr); gap:8px;">
-                <div>
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">Emulator DPI</label>
-                    <input id="cod-emulator-dpi" type="number" min="80" max="480" value="160" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                </div>
-                <div>
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">Mouse DPI</label>
-                    <input id="cod-mouse-dpi" type="number" min="100" max="3200" value="800" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                </div>
-                <div>
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">Polling Rate (Hz)</label>
-                    <select id="cod-polling-rate" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;">
-                        <option value="125">125</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">X Sensitivity (0.1 - 3.0)</label>
-                    <input id="cod-x-sens" type="number" min="0.1" max="3" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                </div>
-                <div>
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">Y Sensitivity (0.1 - 2.5)</label>
-                    <input id="cod-y-sens" type="number" min="0.1" max="2.5" step="0.01" value="1.0" style="width:100%; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                </div>
-                <div style="grid-column:1 / -1; display:flex; gap:8px; align-items:center;">
-                    <label style="font-size:12px; color:rgba(255,255,255,0.8);">Tweaks (مثال: 12345)</label>
-                    <input id="cod-tweaks" type="text" placeholder="optional" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.05); color:white;" />
-                </div>
-                <div style="grid-column:1 / -1; display:flex; align-items:center; gap:8px;">
-                    <input type="checkbox" id="cod-precision-mode" /> <label for="cod-precision-mode" style="font-size:12px; color:rgba(255,255,255,0.8);">Enable Precision Mode</label>
-                </div>
-            </div>
-        </div>
-
-        <div id="cod-sensitivity-results"></div>
-
-        <div class="ios-card">
-            <h3 style="margin-bottom: 12px;">إعدادات الجرافيك - COD</h3>
-            <button class="ios-button" onclick="generateCODGraphics()" style="width:100%; justify-content:center;"><i class="fas fa-cog"></i> توليد إعدادات الجرافيك COD</button>
-            <div id="cod-graphics-results" style="margin-top:12px;"></div>
-        </div>
-    </div>
-
-    <!-- صفحة الذكاء الاصطناعي -->
-    <div class="ios-container page-section" id="page-ai">
-        <h2><i class="fas fa-robot"></i> المساعد الذكي</h2>
-        
-        <div class="ios-card" style="height: calc(100vh - 250px); display: flex; flex-direction: column;">
-            <div id="ai-chat-messages" style="flex: 1; overflow-y: auto; padding: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.2); border-radius: 12px;">
-                <div style="background: rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 80%;">
-                    مرحباً! أنا مساعدك الذكي للألعاب. كيف يمكنني مساعدتك اليوم؟
-                </div>
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="ai-input" placeholder="اكتب رسالتك..." style="flex: 1; padding: 12px 15px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; font-family: inherit;" onkeypress="if(event.key==='Enter') sendAIMessage()">
-                <button class="ios-button" onclick="sendAIMessage()">
-                    <i class="fas fa-paper-plane"></i>
+                <!-- Generate Button -->
+                <button onclick="generateFreeFireSensitivity()" style="width: 100%;">
+                    <i class="fas fa-magic"></i>
+                    توليد الحساسية الآن
                 </button>
             </div>
-        </div>
-    </div>
 
-    <!-- صفحة الإعدادات المحفوظة -->
-    <div class="ios-container page-section" id="page-saved">
-        <h2><i class="fas fa-save"></i> الإعدادات المحفوظة</h2>
-        <div id="saved-settings-list">
-            <div class="ios-card" style="text-align: center; padding: 40px;">
-                <i class="fas fa-inbox" style="font-size: 48px; color: rgba(255,255,255,0.3); margin-bottom: 15px;"></i>
-                <p>لا توجد إعدادات محفوظة</p>
+            <!-- Results Section -->
+            <div id="ff-sensitivity-results"></div>
+
+            <!-- Graphics Settings -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-top: 40px; backdrop-filter: blur(15px);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-desktop" style="font-size: 20px;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الجرافيك</h3>
+                </div>
+
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 25px; line-height: 1.6;">
+                    احصل على أفضل إعدادات الجرافيك بناءً على مواصفات جهازك
+                </p>
+
+                <button onclick="generateGraphics('freefire')" style="width: 100%;">
+                    <i class="fas fa-cog"></i>
+                    توليد إعدادات الجرافيك
+                </button>
+
+                <div id="ff-graphics-results"></div>
             </div>
         </div>
-    </div>
 
-    <!-- صفحة إعدادات اللاعبين -->
-    <div class="ios-container page-section" id="page-players">
-        <h2><i class="fas fa-users"></i> إعدادات اللاعبين</h2>
-        
-        <button class="ios-button" onclick="showPublishModal()" style="width: 100%; justify-content: center; margin-bottom: 20px; background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-            <i class="fas fa-plus"></i> نشر إعداداتي
-        </button>
-        
-        <div id="players-settings-list">
-            <div class="ios-card" style="text-align: center; padding: 40px;">
-                <i class="fas fa-users" style="font-size: 48px; color: rgba(255,255,255,0.3); margin-bottom: 15px;"></i>
-                <p>لا توجد إعدادات منشورة</p>
+        <!-- PUBG Mobile Section -->
+        <div id="page-pubg" class="page-section" style="display: none;">
+            <!-- Game Header -->
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 15px; padding: 20px 40px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                    <i class="fas fa-crosshairs" style="font-size: 32px; color: #ff9500;"></i>
+                    <h2 style="margin: 0; font-size: 2rem; font-weight: 700;">PUBG Mobile</h2>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-bottom: 40px; backdrop-filter: blur(15px);">
+                
+                <!-- Section Header -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sliders-h" style="font-size: 20px;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الحساسية</h3>
+                </div>
+
+                <!-- Play Style -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-gamepad" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">أسلوب اللعب</label>
+                    </div>
+                    <div class="speed-options">
+                        <input type="radio" id="pubg-slow" name="pubg-speed" value="slow">
+                        <label for="pubg-slow">
+                            <i class="fas fa-user-ninja"></i>
+                            <span>بطيء</span>
+                            <small>دقة عالية</small>
+                        </label>
+                        
+                        <input type="radio" id="pubg-medium" name="pubg-speed" value="medium" checked>
+                        <label for="pubg-medium">
+                            <i class="fas fa-walking"></i>
+                            <span>متوسط</span>
+                            <small>متوازن</small>
+                        </label>
+                        
+                        <input type="radio" id="pubg-fast" name="pubg-speed" value="fast">
+                        <label for="pubg-fast">
+                            <i class="fas fa-running"></i>
+                            <span>سريع</span>
+                            <small>استجابة فورية</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gyroscope Mode -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-mobile-alt" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">وضع الجيروسكوب</label>
+                    </div>
+                    <div class="fire-button-size-options">
+                        <input type="radio" id="pubg-gyro-off" name="pubg-gyro" value="off">
+                        <label for="pubg-gyro-off">
+                            <i class="fas fa-times-circle"></i>
+                            <span>معطل</span>
+                            <small>بدون جيرو</small>
+                        </label>
+                        
+                        <input type="radio" id="pubg-gyro-scope" name="pubg-gyro" value="scope" checked>
+                        <label for="pubg-gyro-scope">
+                            <i class="fas fa-dot-circle"></i>
+                            <span>السكوب فقط</span>
+                            <small>موصى به</small>
+                        </label>
+                        
+                        <input type="radio" id="pubg-gyro-full" name="pubg-gyro" value="full">
+                        <label for="pubg-gyro-full">
+                            <i class="fas fa-check-circle"></i>
+                            <span>دائماً</span>
+                            <small>كامل</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="generatePUBGSensitivity()" style="width: 100%;">
+                    <i class="fas fa-magic"></i>
+                    توليد الحساسية الآن
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="pubg-sensitivity-results"></div>
+
+            <!-- Graphics Settings -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-top: 40px; backdrop-filter: blur(15px);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-desktop" style="font-size: 20px;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الجرافيك</h3>
+                </div>
+
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 25px; line-height: 1.6;">
+                    احصل على أفضل إعدادات الجرافيك بناءً على مواصفات جهازك
+                </p>
+
+                <button onclick="generateGraphics('pubg')" style="width: 100%;">
+                    <i class="fas fa-cog"></i>
+                    توليد إعدادات الجرافيك
+                </button>
+
+                <div id="pubg-graphics-results"></div>
             </div>
         </div>
+
+        <!-- Call of Duty Mobile Section -->
+        <div id="page-cod" class="page-section" style="display: none;">
+            <!-- Game Header -->
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 15px; padding: 20px 40px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                    <i class="fas fa-skull-crossbones" style="font-size: 32px; color: #00ff88;"></i>
+                    <h2 style="margin: 0; font-size: 2rem; font-weight: 700;">Call of Duty Mobile</h2>
+                </div>
+            </div>
+
+            <!-- Settings Card -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-bottom: 40px; backdrop-filter: blur(15px);">
+                
+                <!-- Section Header -->
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sliders-h" style="font-size: 20px;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الحساسية</h3>
+                </div>
+
+                <!-- Rotation Mode -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-sync-alt" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">وضع التدوير</label>
+                    </div>
+                    <div class="fire-button-size-options">
+                        <input type="radio" id="cod-rotation-fixed" name="cod-rotation" value="fixed">
+                        <label for="cod-rotation-fixed">
+                            <i class="fas fa-lock"></i>
+                            <span>ثابت</span>
+                            <small>Fixed</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-rotation-distance" name="cod-rotation" value="distance" checked>
+                        <label for="cod-rotation-distance">
+                            <i class="fas fa-arrows-alt-h"></i>
+                            <span>المسافة</span>
+                            <small>Distance</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-rotation-speed" name="cod-rotation" value="speed">
+                        <label for="cod-rotation-speed">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>السرعة</span>
+                            <small>Speed</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Play Style -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-gamepad" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">أسلوب اللعب</label>
+                    </div>
+                    <div class="fire-button-size-options">
+                        <input type="radio" id="cod-style-standard" name="cod-style" value="standard" checked>
+                        <label for="cod-style-standard">
+                            <i class="fas fa-user"></i>
+                            <span>قياسي</span>
+                            <small>Standard</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-style-sniper" name="cod-style" value="sniper">
+                        <label for="cod-style-sniper">
+                            <i class="fas fa-bullseye"></i>
+                            <span>قناص</span>
+                            <small>Sniper</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-style-aggressive" name="cod-style" value="aggressive">
+                        <label for="cod-style-aggressive">
+                            <i class="fas fa-fire"></i>
+                            <span>عدواني</span>
+                            <small>Aggressive</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Gyroscope -->
+                <div style="margin-bottom: 40px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
+                        <i class="fas fa-mobile-alt" style="font-size: 22px; color: rgba(255,255,255,0.5);"></i>
+                        <label style="margin: 0; color: rgba(255,255,255,0.9); font-weight: 600; font-size: 1.15rem;">الجيروسكوب</label>
+                    </div>
+                    <div class="fire-button-size-options">
+                        <input type="radio" id="cod-gyro-off" name="cod-gyro" value="off">
+                        <label for="cod-gyro-off">
+                            <i class="fas fa-times-circle"></i>
+                            <span>معطل</span>
+                            <small>Off</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-gyro-on" name="cod-gyro" value="on" checked>
+                        <label for="cod-gyro-on">
+                            <i class="fas fa-check-circle"></i>
+                            <span>مفعل</span>
+                            <small>On</small>
+                        </label>
+                        
+                        <input type="radio" id="cod-gyro-full" name="cod-gyro" value="full">
+                        <label for="cod-gyro-full">
+                            <i class="fas fa-circle"></i>
+                            <span>كامل</span>
+                            <small>Full</small>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
+                <button onclick="generateCODSensitivity()" style="width: 100%;">
+                    <i class="fas fa-magic"></i>
+                    توليد الحساسية الآن
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="cod-sensitivity-results"></div>
+
+            <!-- Graphics Settings -->
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 40px; margin-top: 40px; backdrop-filter: blur(15px);">
+                <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 35px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 14px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-desktop" style="font-size: 20px;"></i>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.5rem; font-weight: 700;">إعدادات الجرافيك</h3>
+                </div>
+
+                <p style="color: rgba(255,255,255,0.6); margin-bottom: 25px; line-height: 1.6;">
+                    احصل على أفضل إعدادات الجرافيك بناءً على مواصفات جهازك
+                </p>
+
+                <button onclick="generateGraphics('cod')" style="width: 100%;">
+                    <i class="fas fa-cog"></i>
+                    توليد إعدادات الجرافيك
+                </button>
+
+                <div id="cod-graphics-results"></div>
+            </div>
+        </div>
+
+        <!-- Saved Settings Section -->
+        <div id="page-saved" class="page-section" style="display: none;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <div style="display: inline-flex; align-items: center; gap: 15px; padding: 20px 40px; background: rgba(255,255,255,0.05); border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                    <i class="fas fa-save" style="font-size: 32px; color: #ffd700;"></i>
+                    <h2 style="margin: 0; font-size: 2rem; font-weight: 700;">الإعدادات المحفوظة</h2>
+                </div>
+            </div>
+
+            <div id="saved-settings-list">
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 28px; padding: 60px 40px; text-align: center; backdrop-filter: blur(15px);">
+                    <i class="fas fa-folder-open" style="font-size: 80px; color: rgba(255,255,255,0.2); margin-bottom: 30px;"></i>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 20px; font-weight: 700;">لا توجد إعدادات محفوظة</h3>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 1.1rem; max-width: 500px; margin: 0 auto;">
+                        قم بتوليد وحفظ إعداداتك المفضلة لتظهر هنا
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- شريط التنقل -->
-    <nav class="ios-navbar">
-        <a href="#" class="ios-navbar-item active" onclick="showPage('freefire', this); return false;">
+    <!-- Floating Navigation -->
+    <nav class="navbar">
+        <a href="#" class="active" onclick="navigateTo('page-freefire'); return false;" data-page="freefire">
             <i class="fas fa-fire"></i>
             <span>Free Fire</span>
         </a>
-        <a href="#" class="ios-navbar-item" onclick="showPage('pubg', this); return false;">
-            <i class="fas fa-gamepad"></i>
+        <a href="#" onclick="navigateTo('page-pubg'); return false;" data-page="pubg">
+            <i class="fas fa-crosshairs"></i>
             <span>PUBG</span>
         </a>
-        <a href="#" class="ios-navbar-item" onclick="showPage('cod', this); return false;">
-            <i class="fas fa-crosshairs"></i>
+        <a href="#" onclick="navigateTo('page-cod'); return false;" data-page="cod">
+            <i class="fas fa-skull-crossbones"></i>
             <span>COD</span>
         </a>
-        <a href="#" class="ios-navbar-item" onclick="showPage('ai', this); return false;">
-            <i class="fas fa-robot"></i>
-            <span>الذكاء</span>
-        </a>
-        <a href="#" class="ios-navbar-item" onclick="showPage('saved', this); return false;">
+        <a href="#" onclick="navigateTo('page-saved'); return false;" data-page="saved">
             <i class="fas fa-save"></i>
-            <span>المحفوظة</span>
-        </a>
-        <a href="#" class="ios-navbar-item" onclick="showPage('players', this); return false;">
-            <i class="fas fa-users"></i>
-            <span>اللاعبين</span>
+            <span>محفوظة</span>
         </a>
     </nav>
 
-    <!-- Toast -->
-    <div id="toast" class="ios-toast"></div>
+    <!-- Toast Notification -->
+    <div id="toast" style="position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.95); color: #000; padding: 15px 30px; border-radius: 15px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 10000; box-shadow: 0 10px 40px rgba(0,0,0,0.3);"></div>
 
     <script>
-        // ============================================
-        // Card Selection Handler
-        // ============================================
-        function selectSpeedCard(element, fieldName) {
-            const container = element.parentElement;
-            const siblings = container.querySelectorAll('.speed-card');
-            siblings.forEach(card => {
-                card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                card.style.background = 'rgba(0, 0, 0, 0.2)';
-                card.removeAttribute('data-selected');
-            });
-            element.style.borderColor = 'rgba(0, 122, 255, 0.5)';
-            element.style.background = 'rgba(0, 122, 255, 0.15)';
-            element.setAttribute('data-selected', 'true');
-            document.getElementById(fieldName).value = element.getAttribute('data-value');
-        }
-
-        // ============================================
         // Navigation
-        // ============================================
-        function showPage(pageName, el) {
-            const pages = document.querySelectorAll('.page-section');
-            pages.forEach(page => {
-                page.classList.remove('active');
-                page.setAttribute('aria-hidden', 'true');
-            });
-
-            document.querySelectorAll('.ios-navbar-item').forEach(nav => nav.classList.remove('active'));
-
-            const target = document.getElementById('page-' + pageName);
-            if (target) {
-                target.classList.add('active');
-                target.removeAttribute('aria-hidden');
-            }
-
-            if (el) {
-                const navItem = el.closest('.ios-navbar-item');
-                if (navItem) navItem.classList.add('active');
-            }
-        }
-
-        // ============================================
-        // Advanced Sensitivity Calculator
-        // ============================================
-        const playStyles = {
-            fast: {
-                name: 'سريع',
-                multipliers: { general: 1.15, redDot: 1.1, scope2x: 1.05, scope4x: 0.95, sniper: 0.75, freeLook: 1.2, gyro: 0.9 }
-            },
-            medium: {
-                name: 'متوسط',
-                multipliers: { general: 1.0, redDot: 0.98, scope2x: 0.92, scope4x: 0.82, sniper: 0.65, freeLook: 1.05, gyro: 0.75 }
-            },
-            slow: {
-                name: 'بطيء',
-                multipliers: { general: 0.85, redDot: 0.82, scope2x: 0.75, scope4x: 0.68, sniper: 0.55, freeLook: 0.9, gyro: 0.65 }
-            },
-            proSniper: {
-                name: 'قناص محترف',
-                multipliers: { general: 0.75, redDot: 0.7, scope2x: 0.6, scope4x: 0.5, sniper: 0.35, freeLook: 0.8, gyro: 0.5 }
-            },
-            aggressive: {
-                name: 'عدواني',
-                multipliers: { general: 1.25, redDot: 1.2, scope2x: 1.1, scope4x: 0.9, sniper: 0.65, freeLook: 1.3, gyro: 0.95 }
-            },
-            tactical: {
-                name: 'تكتيكي',
-                multipliers: { general: 0.95, redDot: 0.92, scope2x: 0.88, scope4x: 0.78, sniper: 0.6, freeLook: 1.0, gyro: 0.7 }
-            }
-        };
-
-        // Central configuration & tuning (can be edited via Advanced Tuning)
-        const SENSITIVITY_CONFIG = {
-            clamps: {
-                pubg: {
-                    free_look: [1, 300], camera_tpp: [1, 300], camera_fpp: [1, 300], ads: [1, 300],
-                    scope_2x: [1, 300], scope_3x: [1, 300], scope_4x: [1, 300], scope_6x: [1, 300], scope_8x: [1, 300],
-                    sprint: [1, 100],
-                    gyro_camera: [0, 400], gyro_ads: [0, 500], gyro_scope_3x: [0, 500], gyro_scope_4x: [0, 500], gyro_scope_6x: [0, 500], gyro_scope_8x: [0, 500]
-                },
-                cod: {
-                    camera_standard: [60, 100], camera_ads: [85, 130], camera_sniper: [50, 60],
-                    scope_tactical: [30, 120], scope_3x: [30, 120], scope_4x: [20, 100], scope_6x: [10, 80], scope_8x: [5, 60],
-                    firing_standard: [60, 150], firing_ads: [60, 200], firing_sniper: [40, 80], vertical_turn: [20, 150],
-                    gyro_general: [140, 400], gyro_ads: [140, 400], gyro_sniper: [50, 200], vehicle: [0, 300]
-                },
-                ff: {
-                    general: [20, 200], redDot: [20, 200], scope2x: [20, 200], scope4x: [20, 200], sniper: [20, 200], freeLook: [20, 200], gyro: [20, 100]
-                }
-            },
-            scopeMultipliers: { general: 1.0, redDot: 0.98, scope2x: 0.96, scope4x: 0.94, sniper: 0.92, freeLook: 1.02 },
-            presets: {
-                'BlueStacks': { dpi: 240, sensitivityMultiplier: 0.75, mouseDPI: 800, pollingRate: 500, xSens: 1.0, ySens: 1.0 },
-                'LDPlayer': { dpi: 160, sensitivityMultiplier: 0.78, mouseDPI: 800, pollingRate: 500, xSens: 1.0, ySens: 1.0 }
-            }
-        };
-
-        // Detect OS
-        function detectOS() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            const platform = navigator.platform.toLowerCase();
-            
-            if (/windows nt 10/.test(userAgent) || /windows nt 11/.test(userAgent)) return { name: 'Windows 10/11', icon: 'fa-windows' };
-            if (/windows nt 6.3/.test(userAgent)) return { name: 'Windows 8.1', icon: 'fa-windows' };
-            if (/windows nt 6.2/.test(userAgent)) return { name: 'Windows 8', icon: 'fa-windows' };
-            if (/windows nt 6.1/.test(userAgent)) return { name: 'Windows 7', icon: 'fa-windows' };
-            if (/macintosh|mac os x/.test(userAgent)) return { name: 'macOS', icon: 'fa-apple' };
-            if (/linux/.test(userAgent) && !/android/.test(userAgent)) return { name: 'Linux', icon: 'fa-linux' };
-            if (/android/.test(userAgent)) return { name: 'Android', icon: 'fa-android' };
-            if (/iphone|ipad|ipod/.test(userAgent)) return { name: 'iOS', icon: 'fa-apple' };
-            
-            return { name: 'Unknown', icon: 'fa-desktop' };
-        }
-
-        // Detect emulator
-        function detectEmulator() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            const platform = navigator.platform.toLowerCase();
-            const os = detectOS();
-            
-            // Check for emulator indicators in user agent
-            const emulatorIndicators = [
-                'bluestacks', 'nox', 'noxplayer', 'ldplayer', 'memu', 'gameloop',
-                'tencent', 'smartgaga', 'msi', 'appplayer', 'genymotion',
-                'phoenix', 'prime', 'waydroid', 'anbox'
-            ];
-            
-            const isEmulator = emulatorIndicators.some(indicator =>
-                userAgent.includes(indicator)
-            );
-            
-            // Also check for x86 Android (common in emulators)
-            const isX86Android = /android.*x86|x86.*android/i.test(userAgent);
-            
-            // Check for common emulator properties
-            const hasEmulatorProps = (
-                window.location.href.includes('localhost') ||
-                (window.outerWidth - window.innerWidth > 100) || // Dev tools
-                navigator.hardwareConcurrency > 8 // High core count typical of PCs
-            );
-            
-            // If any emulator indicator found
-            if (isEmulator || isX86Android || hasEmulatorProps) {
-                const emulators = [
-                    // Windows Emulators
-                    { name: 'MSI App Player', pattern: /msi|appplayer/i },
-                    { name: 'BlueStacks', pattern: /bluestacks/i },
-                    { name: 'LDPlayer', pattern: /ldplayer/i },
-                    { name: 'Nox Player', pattern: /nox|noxplayer/i },
-                    { name: 'MEmu Play', pattern: /memu/i },
-                    { name: 'GameLoop', pattern: /gameloop|tencent/i },
-                    { name: 'Smart Gaga', pattern: /smartgaga/i },
-                    
-                    // Linux Emulators
-                    { name: 'Waydroid', pattern: /waydroid/i },
-                    { name: 'Anbox', pattern: /anbox/i },
-                    
-                    // Multi-OS
-                    { name: 'Genymotion', pattern: /genymotion/i },
-                    { name: 'Phoenix OS', pattern: /phoenix/i },
-                    { name: 'Prime OS', pattern: /prime/i }
-                ];
-                
-                // Find specific emulator
-                for (const emu of emulators) {
-                    if (emu.pattern.test(userAgent)) {
-                        return { name: `${emu.name} (${os.name})`, os: os.name };
-                    }
-                }
-                
-                // If emulator detected but not identified, return generic
-                return { name: `Android Emulator (${os.name})`, os: os.name };
-            }
-            
-            return null;
-        }
-
-        // Update emulator info display (Free Fire)
-        function updateEmulatorInfo() {
-            const select = document.getElementById('emulator-select');
-            const infoDiv = document.getElementById('emulator-info');
-            const infoText = document.getElementById('emulator-info-text');
-            const settingsDiv = document.getElementById('ff-emulator-settings');
-            const selectedValue = select.value;
-            
-            if (selectedValue) {
-                const emulatorNames = {
-                    'MSI App Player (Windows)': 'MSI App Player - إعداد DPI: 160',
-                    'BlueStacks (Windows)': 'BlueStacks - إعداد DPI: 240 (ممتاز للعب)',
-                    'LDPlayer (Windows)': 'LDPlayer - إعداد DPI: 160',
-                    'Nox Player (Windows)': 'Nox Player - إعداد DPI: 160',
-                    'MEmu Play (Windows)': 'MEmu Play - إعداد DPI: 192',
-                    'GameLoop (Windows)': 'GameLoop - إعداد DPI: 240',
-                    'Smart Gaga (Windows)': 'Smart Gaga - إعداد DPI: 160',
-                    'Waydroid (Linux)': 'Waydroid - إعداد DPI: 160',
-                    'Anbox (Linux)': 'Anbox - إعداد DPI: 160',
-                    'BlueStacks (macOS)': 'BlueStacks (Mac) - إعداد DPI: 220',
-                    'Nox Player (macOS)': 'Nox Player (Mac) - إعداد DPI: 160',
-                    'Genymotion': 'Genymotion - إعداد DPI: 160',
-                    'Phoenix OS': 'Phoenix OS - إعداد DPI: 160',
-                    'Prime OS': 'Prime OS - إعداد DPI: 160'
-                };
-                infoText.textContent = emulatorNames[selectedValue] || selectedValue;
-                infoDiv.style.display = 'block';
-                if (settingsDiv) settingsDiv.style.display = 'block';
-            } else {
-                infoDiv.style.display = 'none';
-                if (settingsDiv) settingsDiv.style.display = 'none';
-            }
-        }
-
-        // Update emulator info display (PUBG)
-        function updatePUBGEmulatorInfo() {
-
-            const select = document.getElementById('pubg-emulator-select');
-            const infoDiv = document.getElementById('pubg-emulator-info');
-            const infoText = document.getElementById('pubg-emulator-info-text');
-            const settingsDiv = document.getElementById('pubg-emulator-settings');
-            const selectedValue = select.value;
-            
-            if (selectedValue) {
-                const emulatorNames = {
-                    'MSI App Player (Windows)': 'MSI App Player - إعداد DPI: 160',
-                    'BlueStacks (Windows)': 'BlueStacks - إعداد DPI: 240 (ممتاز للعب)',
-                    'LDPlayer (Windows)': 'LDPlayer - إعداد DPI: 160',
-                    'Nox Player (Windows)': 'Nox Player - إعداد DPI: 160',
-                    'MEmu Play (Windows)': 'MEmu Play - إعداد DPI: 192',
-                    'GameLoop (Windows)': 'GameLoop - إعداد DPI: 240',
-                    'Smart Gaga (Windows)': 'Smart Gaga - إعداد DPI: 160',
-                    'Waydroid (Linux)': 'Waydroid - إعداد DPI: 160',
-                    'Anbox (Linux)': 'Anbox - إعداد DPI: 160',
-                    'BlueStacks (macOS)': 'BlueStacks (Mac) - إعداد DPI: 220',
-                    'Nox Player (macOS)': 'Nox Player (Mac) - إعداد DPI: 160',
-                    'Genymotion': 'Genymotion - إعداد DPI: 160',
-                    'Phoenix OS': 'Phoenix OS - إعداد DPI: 160',
-                    'Prime OS': 'Prime OS - إعداد DPI: 160'
-                };
-                infoText.textContent = emulatorNames[selectedValue] || selectedValue;
-                infoDiv.style.display = 'block';
-                if (settingsDiv) settingsDiv.style.display = 'block';
-            } else {
-                infoDiv.style.display = 'none';
-                if (settingsDiv) settingsDiv.style.display = 'none';
-            }
-        }
-
-        // Update emulator info display (CoD)
-        function updateCODEmulatorInfo() {
-            const select = document.getElementById('cod-emulator-select');
-            const infoDiv = document.getElementById('cod-emulator-info');
-            const infoText = document.getElementById('cod-emulator-info-text');
-            const settingsDiv = document.getElementById('cod-emulator-settings');
-            const selectedValue = select ? select.value : '';
-
-            if (selectedValue) {
-                const emulatorNames = {
-                    'MSI App Player (Windows)': 'MSI App Player - إعداد DPI: 160',
-                    'BlueStacks (Windows)': 'BlueStacks - إعداد DPI: 240 (ممتاز للعب)',
-                    'LDPlayer (Windows)': 'LDPlayer - إعداد DPI: 160',
-                    'Nox Player (Windows)': 'Nox Player - إعداد DPI: 160',
-                    'MEmu Play (Windows)': 'MEmu Play - إعداد DPI: 192',
-                    'GameLoop (Windows)': 'GameLoop - إعداد DPI: 240',
-                    'Smart Gaga (Windows)': 'Smart Gaga - إعداد DPI: 160',
-                    'Waydroid (Linux)': 'Waydroid - إعداد DPI: 160',
-                    'Anbox (Linux)': 'Anbox - إعداد DPI: 160',
-                    'BlueStacks (macOS)': 'BlueStacks (Mac) - إعداد DPI: 220',
-                    'Nox Player (macOS)': 'Nox Player (Mac) - إعداد DPI: 160',
-                    'Genymotion': 'Genymotion - إعداد DPI: 160',
-                    'Phoenix OS': 'Phoenix OS - إعداد DPI: 160',
-                    'Prime OS': 'Prime OS - إعداد DPI: 160'
-                };
-                infoText.textContent = emulatorNames[selectedValue] || selectedValue;
-                if (infoDiv) infoDiv.style.display = 'block';
-                if (settingsDiv) settingsDiv.style.display = 'block';
-            } else {
-                if (infoDiv) infoDiv.style.display = 'none';
-                if (settingsDiv) settingsDiv.style.display = 'none';
-            }
-        }
-
-        // Get device info
-        function getDeviceInfo() {
-            const width = window.innerWidth;
-            const height = window.innerHeight;
-            const userAgent = navigator.userAgent;
-            const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(userAgent);
-            const isTablet = /iPad|tablet/i.test(userAgent) || (width > 768 && isMobile);
-            const isDesktop = !isMobile && !isTablet;
-            
-            // Check for manual emulator selection first (check both Free Fire and PUBG selects)
-            const ffEmulator = document.getElementById('emulator-select');
-            const pubgEmulator = document.getElementById('pubg-emulator-select');
-            const manualEmulator = (ffEmulator && ffEmulator.value) || (pubgEmulator && pubgEmulator.value);
-            const os = detectOS();
-            
-            // If manual selection, use it; otherwise use auto detection
-            let emulator = null;
-            if (manualEmulator) {
-                const osName = manualEmulator.includes('Windows') ? 'Windows' :
-                              manualEmulator.includes('Linux') ? 'Linux' :
-                              manualEmulator.includes('macOS') ? 'macOS' : 'Multi';
-                emulator = { name: manualEmulator, os: osName };
-
-                // Read any visible emulator-specific UI overrides (FF/PUBG/COD)
-                const ffSettingsDiv = document.getElementById('ff-emulator-settings');
-                const pubgSettingsDiv = document.getElementById('pubg-emulator-settings');
-                const codSettingsDiv = document.getElementById('cod-emulator-settings');
-
-                function readEmu(divPrefix) {
-                    const obj = {};
-                    try {
-                        const dpiEl = document.getElementById(divPrefix + '-emulator-dpi');
-                        const mouseDpiEl = document.getElementById(divPrefix + '-mouse-dpi');
-                        const pollEl = document.getElementById(divPrefix + '-polling-rate');
-                        const xEl = document.getElementById(divPrefix + '-x-sens');
-                        const yEl = document.getElementById(divPrefix + '-y-sens');
-                        const tweaksEl = document.getElementById(divPrefix + '-tweaks');
-                        const precisionEl = document.getElementById(divPrefix + '-precision-mode');
-
-                        if (dpiEl && dpiEl.value) obj.dpi = parseInt(dpiEl.value) || undefined;
-                        if (mouseDpiEl && mouseDpiEl.value) obj.mouseDPI = parseInt(mouseDpiEl.value) || undefined;
-                        if (pollEl && pollEl.value) obj.pollingRate = parseInt(pollEl.value) || undefined;
-                        if (xEl && xEl.value) obj.xSens = parseFloat(xEl.value) || undefined;
-                        if (yEl && yEl.value) obj.ySens = parseFloat(yEl.value) || undefined;
-                        if (tweaksEl && tweaksEl.value) obj.tweaks = tweaksEl.value || undefined;
-                        if (precisionEl) obj.precisionMode = precisionEl.checked || false;
-                    } catch (e) {
-                        // ignore
-                    }
-                    return obj;
-                }
-
-                if (ffSettingsDiv && ffSettingsDiv.style.display !== 'none') {
-                    Object.assign(emulator, readEmu('ff'));
-                }
-                if (pubgSettingsDiv && pubgSettingsDiv.style.display !== 'none') {
-                    Object.assign(emulator, readEmu('pubg'));
-                }
-                if (codSettingsDiv && codSettingsDiv.style.display !== 'none') {
-                    Object.assign(emulator, readEmu('cod'));
-                }
-
-            } else {
-                emulator = detectEmulator();
-            }
-
-            
-            // Detect PC specs
-            const cpuCores = navigator.hardwareConcurrency || 4;
-            const isGamingPC = cpuCores >= 8 && (width >= 1920 || height >= 1080);
-            
-            return {
-                width, height,
-                deviceType: emulator ? 'emulator' : isTablet ? 'tablet' : isMobile ? 'mobile' : 'desktop',
-                emulator: emulator,
-                os: os,
-                isDesktop: isDesktop,
-                isGamingPC: isGamingPC,
-                deviceDPI: (emulator && emulator.dpi) ? emulator.dpi : (window.devicePixelRatio * 96 || 96),
-                aspectRatio: width / height,
-                ram: navigator.deviceMemory || (isDesktop ? 8 : 4),
-                emulatorSettings: emulator, // include the parsed emulator settings for downstream use
-                cpuCores: cpuCores,
-                isHighEnd: /iPhone 15|iPhone 14 Pro|Galaxy S23|Pixel 8/i.test(userAgent) || isGamingPC
-            };
-        }
-
-        // Get consistent random factor for device
-        function getDeviceFactor(scopeType) {
-            const device = getDeviceInfo();
-            const scopeMultipliers = (SENSITIVITY_CONFIG && SENSITIVITY_CONFIG.scopeMultipliers) ? SENSITIVITY_CONFIG.scopeMultipliers : { general: 1.0, redDot: 0.98, scope2x: 0.96, scope4x: 0.94, sniper: 0.92, freeLook: 1.02 };
-
-            // DPI influence: higher DPI -> smaller cm per px -> increase sensitivity slightly
-            const dpi = device.deviceDPI || 160;
-            let dpiFactor = 1 + ((dpi - 160) / 800); // small adjustment
-            dpiFactor = Math.max(0.75, Math.min(1.25, dpiFactor));
-
-            // Screen size adjustments: very small screens slightly reduce sensitivity
-            const sizeFactor = (device.width && device.width < 380) ? 0.95 : 1.0;
-
-            // Emulator-specific modifiers (mouse DPI, polling rate, custom X/Y adjustments)
-            // NOTE: For emulators, higher hardware sensitivity (mouse DPI, polling, X/Y) makes raw input faster,
-            // so we *compensate* by reducing generated in-game sensitivity.
-            let emulatorFactor = 1.0;
-            if (device.emulatorSettings) {
-                const emu = device.emulatorSettings;
-                if (emu.mouseDPI) {
-                    // Higher mouse DPI -> more precise hardware -> reduce in-game sensitivity slightly
-                    const m = emu.mouseDPI;
-                    emulatorFactor *= 1 - ((m - 800) / 12000); // small compensating reduction
-                    emulatorFactor = Math.max(0.75, Math.min(1.05, emulatorFactor));
-                }
-                if (emu.pollingRate) {
-                    // Higher polling -> smoother input -> slight reduction
-                    const p = emu.pollingRate;
-                    emulatorFactor *= 1 - ((p - 125) / 20000);
-                }
-                if (typeof emu.xSens === 'number') {
-                    // Higher X sensitivity in emulator -> compensate by reducing in-game numbers
-                    emulatorFactor *= 1 - (emu.xSens - 1.0) * 0.03;
-                }
-                if (typeof emu.ySens === 'number') {
-                    emulatorFactor *= 1 - (emu.ySens - 1.0) * 0.02;
-                }
-            }
-
-            const scopeFactor = scopeMultipliers[scopeType] || 1.0;
-            return dpiFactor * sizeFactor * emulatorFactor * scopeFactor;
-        }
-
-        // Calculate base sensitivity
-        function calculateBaseSensitivity() {
-            // Improved sensitivity algorithm using an approximate eDPI/cm-per-360 model.
-            // Goal: compute a base sensitivity normalized around 100 for a "medium" player on a typical device.
-            const device = getDeviceInfo();
-
-            // Estimate centimeters per pixel using device DPI approximation.
-            // device.deviceDPI was previously computed as window.devicePixelRatio * 96 (approx). cm_per_px = 2.54 / dpi
-            const dpi = device.deviceDPI || 160;
-            const cmPerPx = 2.54 / dpi;
-
-            // Desired centimeters to turn 360 degrees for different play styles (defaults).
-            // Lower cm/360 => faster turning; higher => slower, for precision.
-            const desiredCmByStyle = {
-                fast: 12,
-                medium: 20,
-                slow: 30,
-                proSniper: 40,
-                aggressive: 10,
-                tactical: 25
-            };
-
-            // Default to medium reference for normalization.
-            const referenceCm = desiredCmByStyle.medium; // 20cm baseline
-
-            // Pixels needed to turn 360 on this device for the reference cm
-            const pixelsFor360 = referenceCm / cmPerPx;
-
-            // Map pixelsFor360 to a base sensitivity scale where
-            // base = 100 corresponds to pixelsFor360 on baseline device.
-            // Use a simple linear mapping, then adjust by device and input method.
-            const referencePixels = 1260; // empirical reference (~20cm @ DPI~160)
-            let base = 100 * (pixelsFor360 / referencePixels);
-
-            // Input method adjustments
-            if (device.deviceType === 'mobile') base *= 1.05;
-            else if (device.deviceType === 'tablet') base *= 1.02;
-            else if (device.deviceType === 'emulator') base *= 0.85; // mouse-like control -> lower base
-            else base *= 0.95;
-
-            // Slight boosts for high-end devices, more RAM, or gaming PCs for smoother control
-            if (device.isHighEnd) base *= 1.04;
-            if (device.ram >= 6) base *= 1.02;
-            if (device.isGamingPC) base *= 1.03;
-
-            // Aspect ratio tweak (ultrawide screens may require slightly higher sensitivity)
-            base *= (device.aspectRatio && device.aspectRatio > 2.0) ? 1.04 : 1.0;
-
-            // Clamp to reasonable bounds used elsewhere (20-200)
-            base = Math.round(Math.min(200, Math.max(20, base)));
-            return base;
-        }
-
-        // Get emulator-specific settings
-        function getEmulatorSettings(deviceInfo) {
-            const baseSettings = {
-                dpi: 160,
-                sensitivityMultiplier: 0.8,
-                fireButtonSize: [50, 80]
-            };
-            
-            if (!deviceInfo.emulator) return baseSettings;
-            
-            const emuName = deviceInfo.emulator.name || '';
-            const os = deviceInfo.emulator.os || deviceInfo.os.name;
-            
-            // Settings by emulator name (regardless of OS)
-            const emulatorSettings = {
-                'BlueStacks': { dpi: 240, sensitivityMultiplier: 0.75, fireButtonSize: [55, 85] },
-                'LDPlayer': { dpi: 160, sensitivityMultiplier: 0.78, fireButtonSize: [50, 80] },
-                'Nox Player': { dpi: 160, sensitivityMultiplier: 0.82, fireButtonSize: [45, 75] },
-                'MEmu Play': { dpi: 192, sensitivityMultiplier: 0.8, fireButtonSize: [50, 80] },
-                'GameLoop': { dpi: 240, sensitivityMultiplier: 0.72, fireButtonSize: [60, 90] },
-                'Smart Gaga': { dpi: 160, sensitivityMultiplier: 0.85, fireButtonSize: [45, 75] },
-                'MSI App Player': { dpi: 160, sensitivityMultiplier: 0.8, fireButtonSize: [50, 80] },
-                'Waydroid': { dpi: 160, sensitivityMultiplier: 0.85, fireButtonSize: [50, 80] },
-                'Anbox': { dpi: 160, sensitivityMultiplier: 0.88, fireButtonSize: [45, 75] },
-                'Genymotion': { dpi: 160, sensitivityMultiplier: 0.8, fireButtonSize: [50, 80] },
-                'Phoenix OS': { dpi: 160, sensitivityMultiplier: 0.88, fireButtonSize: [50, 80] },
-                'Prime OS': { dpi: 160, sensitivityMultiplier: 0.88, fireButtonSize: [50, 80] }
-            };
-            
-            // Find matching emulator
-            for (const [name, settings] of Object.entries(emulatorSettings)) {
-                if (emuName.includes(name)) {
-                    return settings;
-                }
-            }
-            
-            // Default emulator settings based on OS
-            const osDefaults = {
-                'Windows': { dpi: 160, sensitivityMultiplier: 0.8, fireButtonSize: [50, 80] },
-                'Linux': { dpi: 160, sensitivityMultiplier: 0.82, fireButtonSize: [50, 80] },
-                'macOS': { dpi: 160, sensitivityMultiplier: 0.8, fireButtonSize: [50, 80] }
-            };
-            
-            return osDefaults[os] || baseSettings;
-        }
-
-        // ============================================
-        // Free Fire Functions
-        // ============================================
-        function generateFreeFireSensitivity() {
-            const style = document.getElementById('ff-speed').value || 'medium';
-            const fireSize = document.getElementById('ff-fire').value || 'medium';
-            const styleConfig = playStyles[style] || playStyles.medium;
-            
-            let base = calculateBaseSensitivity();
-            // Apply emulator multiplier if present
-            const device = getDeviceInfo();
-            if (device.emulator) {
-                const emuProfile = getEmulatorSettings(device);
-                let emuMultiplier = (emuProfile && emuProfile.sensitivityMultiplier) ? emuProfile.sensitivityMultiplier : 1.0;
-                const es = device.emulatorSettings || {};
-                if (es.mouseDPI) emuMultiplier *= 1 - ((es.mouseDPI - 800) / 20000);
-                if (typeof es.xSens === 'number') emuMultiplier *= 1 - (es.xSens - 1.0) * 0.05;
-                if (typeof es.ySens === 'number') emuMultiplier *= 1 - (es.ySens - 1.0) * 0.03;
-                emuMultiplier = Math.max(0.4, Math.min(1.2, emuMultiplier));
-                base = Math.round(base * emuMultiplier);
-            }
-
-            const sensitivities = {};
-            const scopes = ['general', 'redDot', 'scope2x', 'scope4x', 'sniper', 'freeLook'];
-            
-            scopes.forEach(scope => {
-                const multiplier = styleConfig.multipliers[scope] || 1.0;
-                const deviceFactor = getDeviceFactor(scope);
-                let value = Math.round(base * multiplier * deviceFactor);
-                const clampRange = (SENSITIVITY_CONFIG.clamps.ff[scope] || [20,200]);
-                sensitivities[scope] = Math.min(clampRange[1], Math.max(clampRange[0], value));
+        function navigateTo(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.style.display = 'none';
             });
             
-            // Gyroscope with per-scope values
-            sensitivities.gyroscope = {
-                general: Math.min(100, Math.max(20, Math.round(base * styleConfig.multipliers.gyro * 0.5))),
-                redDot: Math.min(100, Math.max(20, Math.round(base * styleConfig.multipliers.gyro * 0.48))),
-                scope2x: Math.min(100, Math.max(20, Math.round(base * styleConfig.multipliers.gyro * 0.43))),
-                scope4x: Math.min(100, Math.max(20, Math.round(base * styleConfig.multipliers.gyro * 0.38))),
-                sniper: Math.min(100, Math.max(20, Math.round(base * styleConfig.multipliers.gyro * 0.3)))
-            };
-            
-            // Fire button size — نستخدم الـ `device` الموجود سابقاً
-            let min, max;
-            
-            if (device.emulator) {
-                // Use emulator-specific settings
-                const emuSettings = getEmulatorSettings(device);
-                min = emuSettings.fireButtonSize[0];
-                max = emuSettings.fireButtonSize[1];
-            } else {
-                const fireSizes = { small: [15, 35], medium: [40, 70], large: [75, 100] };
-                const range = fireSizes[fireSize] || fireSizes.medium;
-                min = range[0];
-                max = range[1];
-                if (device.deviceType === 'mobile') { min += 5; max += 5; }
-                if (device.width < 400) { min -= 5; max -= 5; }
+            // Show selected page
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.style.display = 'block';
             }
             
-            sensitivities.fireButtonSize = Math.floor(Math.random() * (max - min + 1)) + min;
-            
-            // Add device info to results
-            sensitivities.deviceInfo = {
-                type: device.deviceType,
-                emulator: device.emulator,
-                isGamingPC: device.isGamingPC
-            };
-
-            displayFreeFireResults(sensitivities, styleConfig.name);
-        }
-
-        function displayFreeFireResults(sensitivities, styleName) {
-            const colors = {
-                general: '#007AFF', redDot: '#FF3B30', scope2x: '#34C759',
-                scope4x: '#FF9500', sniper: '#AF52DE', freeLook: '#5AC8FA', fireButtonSize: '#FF2D55'
-            };
-
-            const labels = {
-                general: 'حساسية عامة', redDot: 'النقطة الحمراء', scope2x: 'سكوب 2x',
-                scope4x: 'سكوب 4x', sniper: 'القناصة', freeLook: 'النظر الحر', fireButtonSize: 'زر الضرب'
-            };
-
-            let html = `<div class="ios-card" style="animation: fadeIn 0.5s ease;"><h3 style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: #28a745;"></i> نتائج ${styleName}</h3>`;
-            
-            // Show device info if emulator or gaming PC
-            if (sensitivities.deviceInfo && (sensitivities.deviceInfo.emulator || sensitivities.deviceInfo.isGamingPC)) {
-                html += `<div style="background: rgba(0,122,255,0.1); padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;">`;
-                if (sensitivities.deviceInfo.emulator) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> ${sensitivities.deviceInfo.emulator.name}`;
-                    if (sensitivities.deviceInfo.emulator.os) {
-                        html += ` <span style="color: #666;">(${sensitivities.deviceInfo.emulator.os})</span>`;
-                    }
-                } else if (sensitivities.deviceInfo.isGamingPC) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> Gaming PC`;
-                }
-                html += `</div>`;
-            }
-            
-            // Show OS info for all devices
-            if (sensitivities.deviceInfo && sensitivities.deviceInfo.os) {
-                const osIcons = {
-                    'Windows 10/11': 'fa-windows', 'Windows 8.1': 'fa-windows', 'Windows 8': 'fa-windows', 'Windows 7': 'fa-windows',
-                    'macOS': 'fa-apple', 'Linux': 'fa-linux', 'Android': 'fa-android', 'iOS': 'fa-apple'
-                };
-                const osIcon = osIcons[sensitivities.deviceInfo.os.name] || 'fa-desktop';
-                html += `<div style="background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;">`;
-                html += `<i class="fab ${osIcon}" style="color: #007AFF;"></i> ${sensitivities.deviceInfo.os.name}`;
-                html += ` <span style="color: #666;">| نوع الجهاز: ${sensitivities.deviceInfo.type === 'emulator' ? 'محاكي' : sensitivities.deviceInfo.type === 'mobile' ? 'موبايل' : sensitivities.deviceInfo.type === 'tablet' ? 'تابلت' : 'كمبيوتر'}</span>`;
-                html += `</div>`;
-            }
-            
-            html += `<div class="sensitivity-grid">`;
-            
-            for (const [key, value] of Object.entries(sensitivities)) {
-                if (labels[key] && typeof value === 'number') {
-                    html += `
-                        <div class="sensitivity-item">
-                            <div class="sensitivity-label">${labels[key]}</div>
-                            <div class="sensitivity-value" style="color: ${colors[key]};">${value}</div>
-                        </div>
-                    `;
-                }
-            }
-            
-            html += '</div><div style="display: flex; gap: 10px; margin-top: 20px;">';
-            html += '<button class="ios-button" onclick="shareResults()" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #5856D6, #007AFF);"><i class="fas fa-share"></i> مشاركة</button>';
-            html += '<button class="ios-button" onclick="saveResults()" style="flex: 1; justify-content: center; background: linear-gradient(135deg, #28a745, #34d058);"><i class="fas fa-save"></i> حفظ</button>';
-            html += '</div></div>';
-
-            document.getElementById('ff-sensitivity-results').innerHTML = html;
-            
-            // Store for sharing/saving
-            window.lastGeneratedSensitivity = sensitivities;
-        }
-
-        function generateFreeFireGraphics() {
-            const deviceInfo = {
-                width: window.screen.width,
-                height: window.screen.height,
-                ram: navigator.deviceMemory || 4,
-                cores: navigator.hardwareConcurrency || 4
-            };
-
-            let graphicsLevel, fpsLevel, shadowQuality;
-            
-            if (deviceInfo.ram >= 6 && deviceInfo.cores >= 6) {
-                graphicsLevel = 'فائقة';
-                fpsLevel = '60 FPS';
-                shadowQuality = 'عالية';
-            } else if (deviceInfo.ram >= 4) {
-                graphicsLevel = 'عالية';
-                fpsLevel = '45-60 FPS';
-                shadowQuality = 'متوسطة';
-            } else {
-                graphicsLevel = 'متوسطة';
-                fpsLevel = '30 FPS';
-                shadowQuality = 'منخفضة';
-            }
-
-            const html = `
-                <div class="graphics-grid" style="margin-top: 20px; animation: fadeIn 0.5s ease;">
-                    <div class="graphics-item">
-                        <span class="graphics-label">جودة الجرافيك</span>
-                        <span class="graphics-value">${graphicsLevel}</span>
-                    </div>
-                    <div class="graphics-item">
-                        <span class="graphics-label">معدل الإطارات</span>
-                        <span class="graphics-value">${fpsLevel}</span>
-                    </div>
-                    <div class="graphics-item">
-                        <span class="graphics-label">جودة الظلال</span>
-                        <span class="graphics-value">${shadowQuality}</span>
-                    </div>
-                    <div class="graphics-item">
-                        <span class="graphics-label">دقة الشاشة</span>
-                        <span class="graphics-value">${deviceInfo.width}x${deviceInfo.height}</span>
-                    </div>
-                    <div class="graphics-item">
-                        <span class="graphics-label">الذاكرة</span>
-                        <span class="graphics-value">${deviceInfo.ram} GB</span>
-                    </div>
-                    <div class="graphics-item">
-                        <span class="graphics-label">أنوية المعالج</span>
-                        <span class="graphics-value">${deviceInfo.cores}</span>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('ff-graphics-results').innerHTML = html;
-            showToast('تم توليد إعدادات الجرافيك!');
-        }
-
-        // ============================================
-        // PUBG Functions
-        // ============================================
-        function generatePUBGSensitivity() {
-            const speed = (document.getElementById('pubg-speed') && document.getElementById('pubg-speed').value) || 'medium';
-            const gyro = (document.getElementById('pubg-gyro') && document.getElementById('pubg-gyro').value) || 'scope';
-            window._lastPubgGyroMode = gyro;
-
-            // Base as percent-like reference (calculateBaseSensitivity ~100 for medium)
-            const base = calculateBaseSensitivity(); // around 20-200
-            let basePercent = Math.min(300, Math.max(1, Math.round(base)));
-
-            // If emulator profile present, apply emulator sensitivity multiplier and any manual x/y adjustments
-            const device = getDeviceInfo();
-            const emuProfile = device.emulator ? getEmulatorSettings(device) : null;
-            let emuMultiplier = 1.0;
-            if (emuProfile && typeof emuProfile.sensitivityMultiplier === 'number') emuMultiplier *= emuProfile.sensitivityMultiplier;
-            if (device.emulatorSettings) {
-                const es = device.emulatorSettings;
-                // Compensate: higher x/y sens or mouse DPI/polling -> reduce in-game sensitivity values
-                if (typeof es.xSens === 'number') emuMultiplier *= 1 - (es.xSens - 1.0) * 0.05;
-                if (typeof es.ySens === 'number') emuMultiplier *= 1 - (es.ySens - 1.0) * 0.03;
-                if (es.mouseDPI) emuMultiplier *= 1 - ((es.mouseDPI - 800) / 20000);
-                if (es.pollingRate) emuMultiplier *= 1 - ((es.pollingRate - 125) / 20000);
-                emuMultiplier = Math.max(0.4, Math.min(1.2, emuMultiplier));
-            }
-            basePercent = Math.round(basePercent * emuMultiplier);
-
-            // Speed modifiers (affect camera/ads)
-            const speedModifiers = { slow: 0.85, medium: 1.0, fast: 1.15, proSniper: 1.08, aggressive: 1.12, tactical: 0.95 };
-            const sMod = speedModifiers[speed] || 1.0;
-
-            // Authoritative clamps (centralized)
-            const CLAMPS = SENSITIVITY_CONFIG.clamps.pubg;
-
-            function clamp(v, [min, max]) { return Math.min(max, Math.max(min, Math.round(v))); }
-
-            // Calculate core camera sensitivity (free look separate)
-            // Aim to place camera_tpp within typical 80-150 when basePercent ~100
-            const cameraTPP = clamp(basePercent * sMod, CLAMPS.camera_tpp);
-            const cameraFPP = clamp(cameraTPP * 0.92, CLAMPS.camera_fpp);
-
-            // ADS tuned to be precise (90-110 typical); scale from base
-            const adsVal = clamp(basePercent * 0.95 * sMod, CLAMPS.ads);
-
-            // Scope mappings per research (percent-based)
-            const scope_redDot = clamp(adsVal * 0.75, CLAMPS.scope_2x); // red dot / holo approx
-            const scope2x = clamp(adsVal * 0.95, CLAMPS.scope_2x);
-            const scope3x = clamp(adsVal * 0.65, CLAMPS.scope_3x);
-            const scope4x = clamp(adsVal * 0.45, CLAMPS.scope_4x);
-            const scope6x = clamp(adsVal * 0.28, CLAMPS.scope_6x);
-            const scope8x = clamp(adsVal * 0.12, CLAMPS.scope_8x);
-
-            const freeLook = clamp(basePercent * 1.1 * sMod, CLAMPS.free_look); // free look typical 100-150
-            const sprint = clamp(basePercent * 0.25 * sMod, CLAMPS.sprint);
-
-            const sensitivities = {
-                camera_tpp: cameraTPP,
-                camera_fpp: cameraFPP,
-                ads: adsVal,
-                scope_redDot: scope_redDot,
-                scope_2x: scope2x,
-                scope_3x: scope3x,
-                scope_4x: scope4x,
-                scope_6x: scope6x,
-                scope_8x: scope8x,
-                free_look: freeLook,
-                sprint: sprint
-            };
-
-            // Gyro calculations (based on your ranges: close scopes high 300-400, long-range low 50-100)
-            const gyroModeMultiplier = gyro === 'full' ? 1.6 : 1.0;
-            sensitivities.gyro_camera = clamp(basePercent * 3.5 * gyroModeMultiplier, CLAMPS.gyro_camera);
-            sensitivities.gyro_ads = clamp(basePercent * 2.8 * gyroModeMultiplier, CLAMPS.gyro_ads);
-            sensitivities.gyro_scope_3x = clamp(basePercent * 3.2 * gyroModeMultiplier, CLAMPS.gyro_scope_3x);
-            sensitivities.gyro_scope_4x = clamp(basePercent * 1.6 * gyroModeMultiplier, CLAMPS.gyro_scope_4x);
-            sensitivities.gyro_scope_6x = clamp(basePercent * 1.0 * gyroModeMultiplier, CLAMPS.gyro_scope_6x);
-            sensitivities.gyro_scope_8x = clamp(basePercent * 0.75 * gyroModeMultiplier, CLAMPS.gyro_scope_8x);
-
-            sensitivities._gyroMode = gyro;
-
-            displayPUBGResults(sensitivities, gyro);
-        }
-
-        function displayPUBGResults(sensitivities, gyroMode) {
-            const labels = {
-                camera_tpp: 'الكاميرا (TPP)', camera_fpp: 'الكاميرا (FPP)', ads: 'ADS (تصويب)',
-                scope_redDot: 'نقطة استهداف/هولو', scope_2x: 'سكوب 2x', scope_3x: 'سكوب 3x', scope_4x: 'سكوب 4x', scope_6x: 'سكوب 6x', scope_8x: 'سكوب 8x',
-                free_look: 'حساسية النظرة الحرة', sprint: 'حساسية الركض',
-                gyro_camera: 'جيرو - الكاميرا', gyro_ads: 'جيرو - ADS', gyro_scope_3x: 'جيرو - سكوب 3x', gyro_scope_4x: 'جيرو - سكوب 4x', gyro_scope_6x: 'جيرو - سكوب 6x', gyro_scope_8x: 'جيرو - سكوب 8x'
-            };
-
-            function fmt(v, key) {
-                // Show percentages for most fields and raw numbers for gym-like values
-                if (key.startsWith('gyro_') || key === 'gyro' || key === 'ads' || key.startsWith('camera') || key.startsWith('scope') || key === 'free_look' || key === 'sprint') {
-                    return v + '%';
-                }
-                return v;
-            }
-
-            let html = '<div class="ios-card" style="animation: fadeIn 0.5s ease;"><h3 style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: #28a745;"></i> نتائج PUBG</h3>';
-            // Show device info if emulator or gaming PC
-            const device = getDeviceInfo();
-            if (device && (device.emulator || device.isGamingPC)) {
-                html += `<div style="background: rgba(0,122,255,0.1); padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;">`;
-                if (device.emulator && device.emulator.name) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> ${device.emulator.name}`;
-                    if (device.emulator.os) html += ` <span style="color:#666;">(${device.emulator.os})</span>`;
-                } else if (device.isGamingPC) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> Gaming PC`;
-                }
-                html += `</div>`;
-            }
-            html += '<div class="sensitivity-grid">';
-            
-            for (const [key, value] of Object.entries(sensitivities)) {
-                if (labels[key]) {
-                    let suffix = '';
-                    // If gyro is off, show gyro suggestions but mark them as recommendations
-                    if (gyroMode === 'off' && key.startsWith('gyro_')) {
-                        suffix = ' <small style="color:#888;">(توصية - الجيروسكوب معطّل)</small>';
-                    }
-
-                    html += `
-                        <div class="sensitivity-item">
-                            <div class="sensitivity-label">${labels[key]}</div>
-                            <div class="sensitivity-value">${fmt(value, key)}${suffix}</div>
-                        </div>
-                    `;
-                }
-            }
-
-            // Add export / copy button
-            html += `</div><div style="margin-top:12px; display:flex; gap:8px;">
-                <button class="ios-button" onclick="copyPUBGSensitivity(${JSON.stringify(sensitivities)}, '${gyroMode}')">نسخ الحساسية</button>
-                <button class="ios-button" onclick="showPUBGAdvanced()">عرض متقدم</button>
-            </div></div>`;
-
-            document.getElementById('pubg-sensitivity-results').innerHTML = html;
-        }
-
-        function generateCODSensitivity() {
-            const rotation = (document.getElementById('cod-rotation') && document.getElementById('cod-rotation').value) || 'distance';
-            const style = (document.getElementById('cod-style') && document.getElementById('cod-style').value) || 'standard';
-            const gyro = (document.getElementById('cod-gyro') && document.getElementById('cod-gyro').value) || 'on';
-            const vehicleSlider = (document.getElementById('cod-vehicle-slider') && Number(document.getElementById('cod-vehicle-slider').value)) || null;
-
-            let base = calculateBaseSensitivity();
-            let basePercent = Math.min(300, Math.max(1, Math.round(base)));
-
-            // Apply emulator adjustments if needed
-            const device = getDeviceInfo();
-            if (device.emulator) {
-                const emuProfile = getEmulatorSettings(device);
-                let emuMultiplier = (emuProfile && emuProfile.sensitivityMultiplier) ? emuProfile.sensitivityMultiplier : 1.0;
-                const es = device.emulatorSettings || {};
-                if (es.mouseDPI) emuMultiplier *= 1 - ((es.mouseDPI - 800) / 20000);
-                if (typeof es.xSens === 'number') emuMultiplier *= 1 - (es.xSens - 1.0) * 0.05;
-                if (typeof es.ySens === 'number') emuMultiplier *= 1 - (es.ySens - 1.0) * 0.03;
-                if (es.pollingRate) emuMultiplier *= 1 - ((es.pollingRate - 125) / 20000);
-                emuMultiplier = Math.max(0.4, Math.min(1.2, emuMultiplier));
-                basePercent = Math.round(basePercent * emuMultiplier);
-            }
-            const styleModifiers = { standard: 1.0, sniper: 0.65, aggressive: 1.12 };
-            const sMod = styleModifiers[style] || 1.0;
-
-            // Ranges from research: camera standard 60-100, ADS 85-130, sniper 50-60
-            function clamp(v, [min, max]) { return Math.min(max, Math.max(min, Math.round(v))); }
-
-            const camera_standard = clamp(basePercent * 0.9 * sMod, SENSITIVITY_CONFIG.clamps.cod.camera_standard);
-            const camera_ads = clamp(basePercent * 1.05 * sMod, SENSITIVITY_CONFIG.clamps.cod.camera_ads);
-            const camera_sniper = clamp(basePercent * 0.55 * sMod, SENSITIVITY_CONFIG.clamps.cod.camera_sniper);
-
-
-            // Tactical and scopes
-            const scope_tactical = clamp(camera_ads * 0.8, SENSITIVITY_CONFIG.clamps.cod.scope_tactical);
-            const scope_3x = clamp(camera_ads * 0.7, SENSITIVITY_CONFIG.clamps.cod.scope_3x);
-            const scope_4x = clamp(camera_ads * 0.6, SENSITIVITY_CONFIG.clamps.cod.scope_4x);
-            const scope_6x = clamp(camera_ads * 0.45, SENSITIVITY_CONFIG.clamps.cod.scope_6x);
-            const scope_8x = clamp(camera_ads * 0.3, SENSITIVITY_CONFIG.clamps.cod.scope_8x);
-
-
-            // Firing sensitivity – similar sections, vertical turning can go high
-            const firing_standard = clamp(camera_standard * 1.0, SENSITIVITY_CONFIG.clamps.cod.firing_standard);
-            const firing_ads = clamp(camera_ads * 1.05, SENSITIVITY_CONFIG.clamps.cod.firing_ads);
-            const firing_sniper = clamp(camera_sniper * 1.1, SENSITIVITY_CONFIG.clamps.cod.firing_sniper);
-            const vertical_turn = clamp(basePercent * 1.2 * sMod, SENSITIVITY_CONFIG.clamps.cod.vertical_turn);
-
-
-            // Gyroscope - commonly 140-300
-            const gyroMultiplier = gyro === 'full' ? 1.4 : 1.0;
-            const gyro_general = clamp(basePercent * 2.5 * gyroMultiplier, SENSITIVITY_CONFIG.clamps.cod.gyro_general);
-            const gyro_ads = clamp(basePercent * 2.0 * gyroMultiplier, SENSITIVITY_CONFIG.clamps.cod.gyro_ads);
-            const gyro_sniper = clamp(basePercent * 1.0 * gyroMultiplier, SENSITIVITY_CONFIG.clamps.cod.gyro_sniper);
-
-            // Vehicle
-            const vehicle = vehicleSlider !== null ? clamp(vehicleSlider, SENSITIVITY_CONFIG.clamps.cod.vehicle) : clamp(basePercent * 1.5, SENSITIVITY_CONFIG.clamps.cod.vehicle);
-
-
-            const sens = {
-                rotation_mode: rotation,
-                camera_standard, camera_ads, camera_sniper,
-                scope_tactical, scope_3x, scope_4x, scope_6x, scope_8x,
-                firing_standard, firing_ads, firing_sniper, vertical_turn,
-                gyro_general, gyro_ads, gyro_sniper,
-                vehicle
-            };
-
-            displayCODResults(sens, gyro);
-        }
-
-        function displayCODResults(sens, gyroMode) {
-            const labels = {
-                rotation_mode: 'وضع التدوير', camera_standard: 'حساسية الكاميرا (قياسية)', camera_ads: 'حساسية ADS', camera_sniper: 'حساسية القناص',
-                scope_tactical: 'سكوب تكتيكي', scope_3x: 'سكوب 3x', scope_4x: 'سكوب 4x', scope_6x: 'سكوب 6x', scope_8x: 'سكوب 8x',
-                firing_standard: 'حساسية إطلاق (قياسية)', firing_ads: 'حساسية إطلاق (ADS)', firing_sniper: 'حساسية إطلاق (قناص)', vertical_turn: 'التدوير العمودي',
-                gyro_general: 'جيروسكوب عام', gyro_ads: 'جيروسكوب أثناء ADS', gyro_sniper: 'جيروسكوب للقنص', vehicle: 'حساسية المركبات'
-            };
-
-            function fmt(v, key) { if (key === 'rotation_mode') return v; return v + '%'; }
-
-            let html = '<div class="ios-card" style="animation: fadeIn 0.5s ease;"><h3 style="margin-bottom: 15px;"><i class="fas fa-check-circle" style="color: #28a745;"></i> نتائج Call of Duty</h3>';
-            // Show device info if emulator or gaming PC
-            const device = getDeviceInfo();
-            if (device && (device.emulator || device.isGamingPC)) {
-                html += `<div style="background: rgba(0,122,255,0.1); padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 13px;">`;
-                if (device.emulator && device.emulator.name) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> ${device.emulator.name}`;
-                    if (device.emulator.os) html += ` <span style="color:#666;">(${device.emulator.os})</span>`;
-                } else if (device.isGamingPC) {
-                    html += `<i class="fas fa-desktop" style="color: #007AFF;"></i> Gaming PC`;
-                }
-                html += `</div>`;
-            }
-            html += '<div class="sensitivity-grid">';
-            for (const [k, v] of Object.entries(sens)) {
-                if (labels[k]) {
-                    let suffix = '';
-                    if (gyroMode === 'off' && k.startsWith('gyro_')) suffix = ' <small style="color:#888;">(توصية - الجيروسكوب معطّل)</small>';
-                    html += `\n                        <div class="sensitivity-item">\n                            <div class="sensitivity-label">${labels[k]}</div>\n                            <div class="sensitivity-value">${fmt(v,k)}${suffix}</div>\n                        </div>`;
-                }
-            }
-            html += '</div><div style="margin-top:12px; display:flex; gap:8px;">\n                <button class="ios-button" onclick="copyCODSensitivity('+JSON.stringify(sens)+', \''+gyroMode+'\')">نسخ الحساسية</button>\n                <button class="ios-button" onclick="showCODAdvanced()">عرض متقدم</button>\n            </div></div>';
-            document.getElementById('cod-sensitivity-results').innerHTML = html;
-        }
-
-        function copyCODSensitivity(sens, gyroMode) {
-            try {
-                const s = (typeof sens === 'string') ? JSON.parse(s.replace(/&quot;/g,'"')) : sens;
-                const labels = {
-                    rotation_mode: 'Rotation Mode', camera_standard: 'Camera (Standard)', camera_ads: 'Camera ADS', camera_sniper: 'Sniper',
-                    scope_tactical: 'Tactical', scope_3x: '3x', scope_4x: '4x', scope_6x: '6x', scope_8x: '8x',
-                    firing_standard: 'Firing (Standard)', firing_ads: 'Firing ADS', firing_sniper: 'Firing Sniper', vertical_turn: 'Vertical Turn',
-                    gyro_general: 'Gyro General', gyro_ads: 'Gyro ADS', gyro_sniper: 'Gyro Sniper', vehicle: 'Vehicle'
-                };
-                let text = '';
-                for (const key of Object.keys(labels)) {
-                    if (s[key] !== undefined) {
-                        text += `${labels[key]}: ${s[key]}`;
-                        if (gyroMode === 'off' && key.startsWith('gyro_')) text += ' (recommended - gyro off)';
-                        text += '\n';
-                    }
-                }
-                navigator.clipboard.writeText(text).then(()=> showTempToast('تم نسخ قيم COD إلى الحافظة ✅')).catch(()=> prompt('انسخ القيم يدوياً', text));
-            } catch (err) { console.error(err); alert('حدث خطأ أثناء نسخ الحساسية'); }
-        }
-
-        function showCODAdvanced() {
-            const container = document.getElementById('cod-sensitivity-results');
-            const info = `<div class="ios-card" style="animation: fadeIn 0.4s ease;"><h4>ملاحظات متقدمة - COD</h4>
-                <ul style="padding-left:18px; line-height:1.6; color: rgba(255,255,255,0.9);">
-                    <li>نطاقات حساسية الكاميرا والـADS مبنية على بحث المستخدم (Standard:60-100, ADS:85-130, Sniper:50-60).</li>
-                    <li>تدوير عمودي مرتفع يساعد على التحكم بالارتداد؛ القيم الاحترافية تصل إلى 150.</li>
-                    <li>الجيروسكوب يمكن أن يصل إلى 400 في بعض الأجهزة والإعدادات المتطرفة.</li>
-                </ul>
-                <div style="text-align:right; margin-top:10px;"><button class="ios-button" onclick="document.getElementById('cod-sensitivity-results').innerHTML='';">إغلاق</button></div>
-            </div>`;
-            container.innerHTML = info;
-        }
-
-        function generatePUBGGraphics() {
-            const device = getDeviceInfo();
-            const score = (device.ram || 4) * (device.cpuCores || 4) * (device.isHighEnd ? 1.3 : 1);
-
-            // Graphics tiers
-            let graphics = 'Smooth';
-            let fps = '20 FPS';
-            let style = 'Classic';
-            let aa = 'Off';
-            let shadows = 'Off';
-
-            if (score >= 28) { graphics = 'UHD'; fps = '90 FPS'; style = 'Realistic'; aa = '4x'; shadows = 'Real-time'; }
-            else if (score >= 18) { graphics = 'Ultra HD'; fps = '60 FPS'; style = 'Realistic'; aa = '2x'; shadows = 'High'; }
-            else if (score >= 12) { graphics = 'HDR'; fps = '40 FPS'; style = 'Colorful'; aa = '2x'; shadows = 'Medium'; }
-            else if (score >= 7) { graphics = 'HD'; fps = '30 FPS'; style = 'Balanced'; aa = 'Close'; shadows = 'Medium'; }
-            else if (score >= 4) { graphics = 'Balanced'; fps = '25 FPS'; style = 'Balanced'; aa = 'Close'; shadows = 'Low'; }
-            else { graphics = 'Smooth'; fps = '20 FPS'; style = 'Classic'; aa = 'Off'; shadows = 'Off'; }
-
-            // Anti-aliasing availability note
-            const aaOptions = ['Off', 'Close'];
-            if (score >= 12) aaOptions.push('2x');
-            if (score >= 28) aaOptions.push('4x');
-
-            // Styles available
-            const styles = ['Classic', 'Colorful', 'Realistic', 'Soft', 'Movie'];
-
-            const result = { graphics, fps, style, antiAliasing: aa, shadows, resolution: `${device.width}x${device.height}` };
-
-            // store for copy/export
-            window.lastGeneratedGraphics = window.lastGeneratedGraphics || {};
-            window.lastGeneratedGraphics.pubg = result;
-
-            const html = `
-                <div class="graphics-grid" style="margin-top: 20px; animation: fadeIn 0.5s ease;">
-                    <div class="graphics-item"><span class="graphics-label">جودة الجرافيك</span><span class="graphics-value">${graphics}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">معدل الإطارات</span><span class="graphics-value">${fps}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">النمط (Style)</span><span class="graphics-value">${style}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Anti-aliasing</span><span class="graphics-value">${aa} (متاح: ${aaOptions.join(', ')})</span></div>
-                    <div class="graphics-item"><span class="graphics-label">الظلال</span><span class="graphics-value">${shadows}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">دقة الشاشة</span><span class="graphics-value">${device.width}x${device.height}</span></div>
-                </div>
-                <div style="margin-top:12px; display:flex; gap:8px;">
-                    <button class="ios-button" onclick="copyPUBGGraphics()">نسخ إعدادات الجرافيك</button>
-                    <button class="ios-button" onclick="showPUBGGraphicsAdvanced()">عرض متقدم</button>
-                </div>
-            `;
-
-            document.getElementById('pubg-graphics-results').innerHTML = html;
-        }
-
-        function generateCODGraphics() {
-            const device = getDeviceInfo();
-            const score = (device.ram || 4) * (device.cpuCores || 4) * (device.isHighEnd ? 1.3 : 1);
-
-            // quality tiers
-            let quality = 'Low';
-            let fps = 'Low';
-            let ultraAvailable = false;
-            if (score >= 28) { quality = 'Very High'; fps = 'Max (60 FPS)'; ultraAvailable = true; }
-            else if (score >= 18) { quality = 'High'; fps = 'Very High'; }
-            else if (score >= 10) { quality = 'Medium'; fps = 'High'; }
-            else { quality = 'Low'; fps = 'Low'; }
-
-            // Ultra / 90+ only for top devices or emulators
-            if (ultraAvailable && (device.isGamingPC || device.isHighEnd)) fps = 'Ultra (90/120 FPS)';
-
-            // Visual toggles
-            const enableDepthOfField = score >= 12;
-            const enableBloom = score >= 10;
-            const enableRealTimeShadows = score >= 18;
-            const enableRagdoll = score >= 12;
-
-            const result = { quality, fps, depthOfField: enableDepthOfField, bloom: enableBloom, realTimeShadows: enableRealTimeShadows, ragdoll: enableRagdoll };
-            window.lastGeneratedGraphics = window.lastGeneratedGraphics || {};
-            window.lastGeneratedGraphics.cod = result;
-
-            const html = `
-                <div class="graphics-grid" style="margin-top: 20px; animation: fadeIn 0.5s ease;">
-                    <div class="graphics-item"><span class="graphics-label">جودة الرسم</span><span class="graphics-value">${quality}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">معدل الإطارات</span><span class="graphics-value">${fps}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Depth of Field</span><span class="graphics-value">${enableDepthOfField ? 'On' : 'Off'}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Bloom</span><span class="graphics-value">${enableBloom ? 'On' : 'Off'}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Real-time Shadows</span><span class="graphics-value">${enableRealTimeShadows ? 'On' : 'Off'}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Ragdoll</span><span class="graphics-value">${enableRagdoll ? 'On' : 'Off'}</span></div>
-                </div>
-                <div style="margin-top:12px; display:flex; gap:8px;">
-                    <button class="ios-button" onclick="copyCODGraphics()">نسخ إعدادات الجرافيك</button>
-                    <button class="ios-button" onclick="showCODAdvanced()">عرض متقدم</button>
-                </div>
-            `;
-
-            document.getElementById('cod-graphics-results').innerHTML = html;
-        }
-
-        function generateFreeFireGraphicsV2() {
-            const device = getDeviceInfo();
-            const score = (device.ram || 4) * (device.cpuCores || 4) * (device.isHighEnd ? 1.3 : 1);
-
-            // Map to Free Fire settings
-            let graphics = 'Smooth';
-            let fps = '30 FPS';
-            let shadow = 'Off';
-            let highRes = false;
-            let filter = 'Classic';
-
-            if (score >= 30) { graphics = 'Max'; fps = '60 FPS'; shadow = 'On'; highRes = true; filter = 'Vivid'; }
-            else if (score >= 18) { graphics = 'Ultra'; fps = '60 FPS'; shadow = 'On'; highRes = true; filter = 'Bright'; }
-            else if (score >= 10) { graphics = 'Standard'; fps = '45-60 FPS'; shadow = 'On'; filter = 'Classic'; }
-            else { graphics = 'Smooth'; fps = '30 FPS'; shadow = 'Off'; filter = 'Classic'; }
-
-            if (device.deviceDPI && device.deviceDPI > 220 && graphics !== 'Smooth') highRes = true;
-
-            const result = { graphics, fps, shadow, highRes, filter, resolution: `${device.width}x${device.height}` };
-            window.lastGeneratedGraphics = window.lastGeneratedGraphics || {};
-            window.lastGeneratedGraphics.ff = result;
-
-            const html = `
-                <div class="graphics-grid" style="margin-top: 20px; animation: fadeIn 0.5s ease;">
-                    <div class="graphics-item"><span class="graphics-label">جودة الجرافيك</span><span class="graphics-value">${graphics}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">معدل الإطارات</span><span class="graphics-value">${fps}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">الظل</span><span class="graphics-value">${shadow}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">High Res</span><span class="graphics-value">${highRes ? 'Enabled' : 'Disabled'}</span></div>
-                    <div class="graphics-item"><span class="graphics-label">Filter</span><span class="graphics-value">${filter}</span></div>
-                </div>
-                <div style="margin-top:12px; display:flex; gap:8px;">
-                    <button class="ios-button" onclick="copyFFGraphics()">نسخ إعدادات الجرافيك</button>
-                    <button class="ios-button" onclick="showFFAdvanced()">عرض متقدم</button>
-                </div>
-            `;
-
-            document.getElementById('ff-graphics-results').innerHTML = html;
-        }
-
-        function copyPUBGSensitivity(sens, gyroMode) {
-            try {
-                // sens may be passed as an object or JSON string
-                const s = (typeof sens === 'string') ? JSON.parse(sens.replace(/&quot;/g, '"')) : sens;
-                const labels = {
-                    camera_tpp: 'Camera (TPP)', camera_fpp: 'Camera (FPP)', ads: 'ADS',
-                    scope_redDot: 'Red Dot / Holo', scope_2x: 'Scope 2x', scope_3x: 'Scope 3x', scope_4x: 'Scope 4x', scope_6x: 'Scope 6x', scope_8x: 'Scope 8x',
-                    free_look: 'Free Look', sprint: 'Sprint',
-                    gyro_camera: 'Gyro - Camera', gyro_ads: 'Gyro - ADS', gyro_scope_3x: 'Gyro - 3x', gyro_scope_4x: 'Gyro - 4x', gyro_scope_6x: 'Gyro - 6x', gyro_scope_8x: 'Gyro - 8x'
-                };
-
-                let text = '';
-                for (const key of Object.keys(labels)) {
-                    if (s[key] !== undefined) {
-                        text += `${labels[key]}: ${s[key]}%`;
-                        if (gyroMode === 'off' && key.startsWith('gyro_')) text += ' (recommended - gyro off)';
-                        text += '\n';
-                    }
-                }
-
-                navigator.clipboard.writeText(text).then(() => {
-                    showTempToast('تم نسخ قيم الحساسية إلى الحافظة ✅');
-                }).catch(() => {
-                    prompt('انسخ القيم يدوياً', text);
-                });
-            } catch (err) {
-                console.error(err);
-                alert('حدث خطأ أثناء نسخ الحساسية');
-            }
-        }
-
-        function showPUBGAdvanced() {
-            const container = document.getElementById('pubg-sensitivity-results');
-            const info = `<div class="ios-card" style="animation: fadeIn 0.4s ease;"><h4>ملاحظات متقدمة</h4>
-                <ul style="padding-left:18px; line-height:1.6;">
-                    <li>القيم المولّدة مبنية على أساس الجهاز (eDPI/cm-per-360) ثم تحويلها لمجالات اللعبة.</li>
-                    <li>اضبط <strong>ADS</strong> و<strong>سكوبات</strong> يدوياً داخل اللعبة للحصول على أفضل نتيجة.</li>
-                    <li>وضع الجيروسكوب قد يتطلب ضبط مستقل حسب تفضيلك وحجم السكوب.</li>
-                </ul>
-                <div style="text-align:right; margin-top:10px;"><button class="ios-button" onclick="document.getElementById('pubg-sensitivity-results').innerHTML='';">إغلاق</button></div>
-            </div>`;
-            container.innerHTML = info;
-        }
-
-        function copyPUBGGraphics() {
-            try {
-                const s = window.lastGeneratedGraphics && window.lastGeneratedGraphics.pubg;
-                if (!s) return alert('لا توجد إعدادات جرافيك منشأة بعد.');
-                let text = `PUBG Graphics:\nجودة: ${s.graphics}\nمعدل الإطارات: ${s.fps}\nالنمط: ${s.style}\nAnti-aliasing: ${s.antiAliasing}\nالظلال: ${s.shadows}\nالدقة: ${s.resolution}`;
-                navigator.clipboard.writeText(text).then(()=> showTempToast('تم نسخ إعدادات الجرافيك ✅')).catch(()=> prompt('انسخ الإعدادات يدوياً', text));
-            } catch (err) { console.error(err); alert('حدث خطأ أثناء النسخ'); }
-        }
-
-        function copyCODGraphics() {
-            try {
-                const s = window.lastGeneratedGraphics && window.lastGeneratedGraphics.cod;
-                if (!s) return alert('لا توجد إعدادات جرافيك منشأة بعد.');
-                let text = `COD Graphics:\nجودة: ${s.quality}\nمعدل الإطارات: ${s.fps}\nDepth of Field: ${s.depthOfField ? 'On' : 'Off'}\nBloom: ${s.bloom ? 'On' : 'Off'}\nReal-time Shadows: ${s.realTimeShadows ? 'On' : 'Off'}\nRagdoll: ${s.ragdoll ? 'On' : 'Off'}`;
-                navigator.clipboard.writeText(text).then(()=> showTempToast('تم نسخ إعدادات الجرافيك ✅')).catch(()=> prompt('انسخ الإعدادات يدوياً', text));
-            } catch (err) { console.error(err); alert('حدث خطأ أثناء النسخ'); }
-        }
-
-        function copyFFGraphics() {
-            try {
-                const s = window.lastGeneratedGraphics && window.lastGeneratedGraphics.ff;
-                if (!s) return alert('لا توجد إعدادات جرافيك منشأة بعد.');
-                let text = `Free Fire Graphics:\nجودة: ${s.graphics}\nمعدل الإطارات: ${s.fps}\nShadow: ${s.shadow}\nHighRes: ${s.highRes ? 'Yes' : 'No'}\nFilter: ${s.filter}\nResolution: ${s.resolution || ''}`;
-                navigator.clipboard.writeText(text).then(()=> showTempToast('تم نسخ إعدادات الجرافيك ✅')).catch(()=> prompt('انسخ الإعدادات يدوياً', text));
-            } catch (err) { console.error(err); alert('حدث خطأ أثناء النسخ'); }
-        }
-
-        function showPUBGGraphicsAdvanced() {
-            const container = document.getElementById('pubg-graphics-results');
-            const info = `<div class="ios-card" style="animation: fadeIn 0.4s ease;"><h4>ملاحظات متقدمة - PUBG Graphics</h4>
-                <ul style="padding-left:18px; line-height:1.6;">
-                    <li>فتح خيارات الجرافيك يعتمد على قوة المعالج (SoC) والذاكرة.</li>
-                    <li>اختر <strong>Smooth</strong> للأداء العالي أو <strong>UHD</strong>/<strong>Ultra HD</strong> للأجهزة القوية.</li>
-                    <li>Anti-aliasing وShadow تؤثران بشدة على الأداء والبطارية.</li>
-                </ul>
-                <div style="text-align:right; margin-top:10px;"><button class="ios-button" onclick="document.getElementById('pubg-graphics-results').innerHTML='';">إغلاق</button></div>
-            </div>`;
-            container.innerHTML = info;
-        }
-
-        function showCODAdvanced() {
-            const container = document.getElementById('cod-graphics-results');
-            const info = `<div class="ios-card" style="animation: fadeIn 0.4s ease;"><h4>ملاحظات متقدمة - COD Graphics</h4>
-                <ul style="padding-left:18px; line-height:1.6; color: rgba(255,255,255,0.9);">
-                    <li>خيارات متقدمة: Depth of Field, Bloom, Real-time Shadows, Ragdoll.</li>
-                    <li>الوضع Ultra يفتح فقط للأجهزة القوية والمحاكيات المتقدمة.</li>
-                </ul>
-                <div style="text-align:right; margin-top:10px;"><button class="ios-button" onclick="document.getElementById('cod-graphics-results').innerHTML='';">إغلاق</button></div>
-            </div>`;
-            container.innerHTML = info;
-        }
-
-        function showFFAdvanced() {
-            const container = document.getElementById('ff-graphics-results');
-            const info = `<div class="ios-card" style="animation: fadeIn 0.4s ease;"><h4>ملاحظات متقدمة - Free Fire Graphics</h4>
-                <ul style="padding-left:18px; line-height:1.6; color: rgba(255,255,255,0.9);">
-                    <li>Free Fire يميل للأداء على الأجهزة الضعيفة؛ استخدم <strong>Smooth</strong> للأجهزة الضعيفة و<strong>Max</strong> للأجهزة القوية أو Free Fire MAX.</li>
-                    <li>دقة الشاشة وDPI تؤثر على وجود خيار High Res وMax.</li>
-                </ul>
-                <div style="text-align:right; margin-top:10px;"><button class="ios-button" onclick="document.getElementById('ff-graphics-results').innerHTML='';">إغلاق</button></div>
-            </div>`;
-            container.innerHTML = info;
-        }
-
-        function showTempToast(msg) {
-            const id = 'toast-' + Date.now();
-            const t = document.createElement('div');
-            t.id = id;
-            t.style.position = 'fixed';
-            t.style.bottom = '20px';
-            t.style.right = '20px';
-            t.style.background = 'rgba(0,0,0,0.8)';
-            t.style.color = '#fff';
-            t.style.padding = '10px 14px';
-            t.style.borderRadius = '8px';
-            t.style.zIndex = 9999;
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(() => { t.style.transition = 'opacity 0.3s'; t.style.opacity = '0'; }, 1800);
-            setTimeout(() => { t.remove(); }, 2200);
-        }
-
-        // ============================================
-        // AI Chat
-        // ============================================
-        async function sendAIMessage() {
-            const input = document.getElementById('ai-input');
-            const messagesContainer = document.getElementById('ai-chat-messages');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            // Add user message
-            messagesContainer.innerHTML += `
-                <div style="background: linear-gradient(135deg, #007AFF, #5856D6); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; margin-left: auto; max-width: 80%; text-align: right;">
-                    ${message}
-                </div>
-            `;
-            input.value = '';
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            // Show typing
-            const typingId = 'typing-' + Date.now();
-            messagesContainer.innerHTML += `
-                <div id="${typingId}" style="background: rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 80%;">
-                    <i class="fas fa-spinner fa-spin"></i> جاري الكتابة...
-                </div>
-            `;
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-            // Call AI API
-            try {
-                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=AIzaSyCi1euTKx54HzVb1CVl7RNriN-xnCeXQqo', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [
-                            { role: 'user', parts: [{ text: 'أنت مساعد ذكي للألعاب. أجب بالعربية.' }] },
-                            { role: 'user', parts: [{ text: message }] }
-                        ]
-                    })
-                });
-
-                const data = await response.json();
-                document.getElementById(typingId).remove();
-                
-                const aiResponse = data.candidates[0].content.parts[0].text;
-                messagesContainer.innerHTML += `
-                    <div style="background: rgba(255,255,255,0.1); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 80%;">
-                        ${aiResponse}
-                    </div>
-                `;
-            } catch (error) {
-                document.getElementById(typingId).remove();
-                messagesContainer.innerHTML += `
-                    <div style="background: rgba(255,0,0,0.2); padding: 12px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 80%;">
-                        عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.
-                    </div>
-                `;
-            }
-            
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // ============================================
-        // Share & Save
-        // ============================================
-        async function shareResults() {
-            if (!window.lastGeneratedSensitivity) return;
-            
-            const s = window.lastGeneratedSensitivity;
-            const text = `🎮 إعدادات Free Fire:\n\n• حساسية عامة: ${s.general}\n• النقطة الحمراء: ${s.redDot}\n• سكوب 2x: ${s.scope2x}\n• سكوب 4x: ${s.scope4x}\n• القناصة: ${s.sniper}\n• النظر الحر: ${s.freeLook}\n• زر الضرب: ${s.fireButtonSize}\n\nRED SETTINGS 🎯`;
-
-            if (navigator.share) {
-                await navigator.share({ title: 'إعدادات Free Fire', text });
-            } else {
-                await navigator.clipboard.writeText(text);
-                showToast('تم النسخ!');
-            }
-        }
-
-        function saveResults() {
-            if (!window.lastGeneratedSensitivity) return;
-            
-            const saved = JSON.parse(localStorage.getItem('savedSettings') || '[]');
-            saved.push({
-                game: 'Free Fire',
-                sensitivities: window.lastGeneratedSensitivity,
-                savedAt: new Date().toLocaleString('ar-SA')
-            });
-            localStorage.setItem('savedSettings', JSON.stringify(saved));
-            showToast('تم الحفظ!');
-            loadSavedSettings();
-        }
-
-        function loadSavedSettings() {
-            const saved = JSON.parse(localStorage.getItem('savedSettings') || '[]');
-            const container = document.getElementById('saved-settings-list');
-            
-            if (saved.length === 0) return;
-            
-            let html = '';
-            saved.forEach((item, index) => {
-                html += `
-                    <div class="ios-card" style="margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <span style="font-weight: 700;"><i class="fas fa-gamepad"></i> ${item.game}</span>
-                            <span style="font-size: 12px; color: rgba(255,255,255,0.6);">${item.savedAt}</span>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 13px;">
-                            <div>عامة: ${item.sensitivities.general}</div>
-                            <div>نقطة: ${item.sensitivities.redDot}</div>
-                            <div>2x: ${item.sensitivities.scope2x}</div>
-                        </div>
-                        <button onclick="deleteSaved(${index})" style="margin-top: 10px; background: rgba(255,0,0,0.3); border: none; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; width: 100%;">
-                            <i class="fas fa-trash"></i> حذف
-                        </button>
-                    </div>
-                `;
+            // Update nav active state
+            document.querySelectorAll('.navbar a').forEach(link => {
+                link.classList.remove('active');
             });
             
-            container.innerHTML = html;
-        }
-
-        function deleteSaved(index) {
-            const saved = JSON.parse(localStorage.getItem('savedSettings') || '[]');
-            saved.splice(index, 1);
-            localStorage.setItem('savedSettings', JSON.stringify(saved));
-            loadSavedSettings();
-            showToast('تم الحذف!');
-        }
-
-        // ============================================
-        // Publish Settings
-        // ============================================
-        function showPublishModal() {
-            const modal = document.createElement('div');
-            modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 3000; padding: 20px;';
-            modal.innerHTML = `
-                <div style="background: rgba(44,44,46,0.98); border-radius: 20px; width: 100%; max-width: 400px; padding: 20px;">
-                    <h3 style="margin-bottom: 20px; text-align: center;">نشر الإعدادات</h3>
-                    <input type="text" id="pub-name" placeholder="اسم اللاعب" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white;">
-                    <input type="text" id="pub-device" placeholder="اسم الجهاز" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white;">
-                    <input type="number" id="pub-general" placeholder="الحساسية العامة" style="width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white;">
-                    <input type="number" id="pub-reddot" placeholder="النقطة الحمراء" style="width: 100%; padding: 12px; margin-bottom: 20px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white;">
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="this.closest('.modal').remove()" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: white; cursor: pointer;">إلغاء</button>
-                        <button onclick="publishPlayerSettings()" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, #007AFF, #5856D6); color: white; cursor: pointer;">نشر</button>
-                    </div>
-                </div>
-            `;
-            modal.className = 'modal';
-            document.body.appendChild(modal);
-        }
-
-        function publishPlayerSettings() {
-            const player = {
-                playerName: document.getElementById('pub-name').value,
-                deviceName: document.getElementById('pub-device').value,
-                generalSensitivity: document.getElementById('pub-general').value,
-                redDotSensitivity: document.getElementById('pub-reddot').value,
-                publishedAt: new Date().toLocaleString('ar-SA')
-            };
+            // Find and activate the correct nav link
+            const targetLink = document.querySelector(`.navbar a[data-page="${pageId.replace('page-', '')}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
             
-            const players = JSON.parse(localStorage.getItem('playerSettings') || '[]');
-            players.unshift(player);
-            localStorage.setItem('playerSettings', JSON.stringify(players));
-            
-            document.querySelector('.modal').remove();
-            showToast('تم النشر!');
-            loadPlayerSettings();
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function loadPlayerSettings() {
-            const players = JSON.parse(localStorage.getItem('playerSettings') || '[]');
-            const container = document.getElementById('players-settings-list');
-            
-            if (players.length === 0) return;
-            
-            let html = '';
-            players.forEach(player => {
-                html += `
-                    <div class="ios-card" style="margin-bottom: 15px;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #007AFF, #5856D6); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700;">
-                                ${player.playerName.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <div style="font-weight: 700;">${player.playerName}</div>
-                                <div style="font-size: 13px; color: rgba(255,255,255,0.6);">${player.deviceName}</div>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center;">
-                            <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.6);">عامة</div>
-                                <div style="font-weight: 700; color: #007AFF;">${player.generalSensitivity}</div>
-                            </div>
-                            <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;">
-                                <div style="font-size: 12px; color: rgba(255,255,255,0.6);">نقطة حمراء</div>
-                                <div style="font-weight: 700; color: #FF3B30;">${player.redDotSensitivity}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
-        }
-
-        // ============================================
-        // Advanced Tuning UI + helpers
-        // ============================================
-        
-        // Simple modal for advanced tuning
-        const advancedTuningHtml = `
-        <div id="advanced-tuning" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center;">
-            <div style="background:#0b0b0c; padding:16px; border-radius:12px; width:320px; max-width:95%;">
-                <h3 style="margin-top:0;">Advanced Tuning</h3>
-                <div style="display:grid; gap:8px;">
-                    <label style="font-size:13px; color:rgba(255,255,255,0.8);">General multiplier (مثال: 1.0)</label>
-                    <input id="tune-general" type="number" step="0.01" value="1.00" style="padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;" />
-                    <label style="font-size:13px; color:rgba(255,255,255,0.8);">Sniper multiplier</label>
-                    <input id="tune-sniper" type="number" step="0.01" value="0.92" style="padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;" />
-                    <label style="font-size:13px; color:rgba(255,255,255,0.8);">Base clamp min</label>
-                    <input id="tune-base-min" type="number" step="1" value="20" style="padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;" />
-                    <label style="font-size:13px; color:rgba(255,255,255,0.8);">Base clamp max</label>
-                    <input id="tune-base-max" type="number" step="1" value="200" style="padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;" />
-                    <div style="display:flex; gap:8px; margin-top:8px;">
-                        <button class="ios-button" onclick="saveTuningSettings()">حفظ</button>
-                        <button class="ios-button" onclick="resetTuningDefaults()">استعادة</button>
-                        <button class="ios-button" onclick="closeAdvancedTuning()">إغلاق</button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
-        // Add modal to body
-        document.body.insertAdjacentHTML('beforeend', advancedTuningHtml);
-
-        // Preset manager modal
-        const presetManagerHtml = `
-        <div id="preset-manager" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:10000; align-items:center; justify-content:center;">
-            <div style="background:#0b0b0c; padding:16px; border-radius:12px; width:380px; max-width:95%;">
-                <h3 style="margin-top:0;">Preset Manager</h3>
-                <div style="display:grid; gap:8px;">
-                    <div style="display:flex; gap:8px;">
-                        <input id="preset-save-name" placeholder="Preset name" style="flex:1; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;" />
-                        <select id="preset-save-target" style="padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;">
-                            <option value="ff">Free Fire</option>
-                            <option value="pubg">PUBG</option>
-                            <option value="cod">CoD</option>
-                        </select>
-                        <button class="ios-button" onclick="saveCurrentAsPreset()">حفظ</button>
-                    </div>
-                    <div id="preset-list" style="max-height:200px; overflow:auto; padding:6px; border-radius:6px; background:rgba(255,255,255,0.02);"></div>
-                    <label style="font-size:13px; color:rgba(255,255,255,0.8);">Export / Import</label>
-                    <textarea id="preset-import-export" style="height:90px; padding:8px; border-radius:6px; border:none; background:rgba(255,255,255,0.03); color:white;"></textarea>
-                    <div style="display:flex; gap:8px;">
-                        <button class="ios-button" onclick="exportPresets()">تصدير</button>
-                        <button class="ios-button" onclick="importPresets()">استيراد</button>
-                        <button class="ios-button" onclick="closePresetManager()">إغلاق</button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', presetManagerHtml);
-
-        function openAdvancedTuning() {
-            loadTuningSettings();
-            document.getElementById('advanced-tuning').style.display = 'flex';
-        }
-        function closeAdvancedTuning() { document.getElementById('advanced-tuning').style.display = 'none'; }
-
-        function loadTuningSettings() {
-            try {
-                const saved = JSON.parse(localStorage.getItem('sensitivity_tuning') || '{}');
-                const general = (saved.general !== undefined) ? saved.general : 1.0;
-                const sniper = (saved.sniper !== undefined) ? saved.sniper : 0.92;
-                const baseMin = (saved.baseMin !== undefined) ? saved.baseMin : 20;
-                const baseMax = (saved.baseMax !== undefined) ? saved.baseMax : 200;
-
-                // update inputs
-                document.getElementById('tune-general').value = general;
-                document.getElementById('tune-sniper').value = sniper;
-                document.getElementById('tune-base-min').value = baseMin;
-                document.getElementById('tune-base-max').value = baseMax;
-
-                // apply to runtime config
-                if (SENSITIVITY_CONFIG && SENSITIVITY_CONFIG.scopeMultipliers) {
-                    SENSITIVITY_CONFIG.scopeMultipliers.general = general;
-                    // keep sniper as multiplier for sniper scope
-                    SENSITIVITY_CONFIG.scopeMultipliers.sniper = sniper;
-                }
-                if (SENSITIVITY_CONFIG && SENSITIVITY_CONFIG.clamps && SENSITIVITY_CONFIG.clamps.ff) {
-                    SENSITIVITY_CONFIG.clamps.ff.general = [baseMin, baseMax];
-                }
-            } catch (e) {}
-        }
-
-        function saveTuningSettings() {
-            const general = parseFloat(document.getElementById('tune-general').value) || 1.0;
-            const sniper = parseFloat(document.getElementById('tune-sniper').value) || 0.92;
-            const baseMin = parseInt(document.getElementById('tune-base-min').value) || 20;
-            const baseMax = parseInt(document.getElementById('tune-base-max').value) || 200;
-            // Apply to config
-            try {
-                // Apply general multiplier to scopeMultipliers.general
-                SENSITIVITY_CONFIG.scopeMultipliers.general = general;
-                SENSITIVITY_CONFIG.scopeMultipliers.sniper = sniper;
-                // Update base ff clamps
-                SENSITIVITY_CONFIG.clamps.ff.general = [baseMin, baseMax];
-                localStorage.setItem('sensitivity_tuning', JSON.stringify({ general, sniper, baseMin, baseMax }));
-                showToast('Advanced tuning saved');
-                closeAdvancedTuning();
-            } catch (e) { showToast('Failed to save tuning'); }
-        }
-
-        function resetTuningDefaults() {
-            localStorage.removeItem('sensitivity_tuning');
-            loadTuningSettings();
-            // revert in-memory defaults
-            SENSITIVITY_CONFIG.scopeMultipliers.general = 1.0;
-            SENSITIVITY_CONFIG.scopeMultipliers.sniper = 0.92;
-            SENSITIVITY_CONFIG.clamps.ff.general = [20,200];
-            showToast('Reset to defaults');
-        }
-
-        // Helper to apply emulator preset to visible emulator fields
-        function applyEmuPreset(prefix, name) {
-            if (!name) return;
-            const preset = SENSITIVITY_CONFIG.presets[name];
-            if (!preset) return;
-            const dpiEl = document.getElementById(prefix + '-emulator-dpi');
-            const mouseEl = document.getElementById(prefix + '-mouse-dpi');
-            const pollEl = document.getElementById(prefix + '-polling-rate');
-            const xEl = document.getElementById(prefix + '-x-sens');
-            const yEl = document.getElementById(prefix + '-y-sens');
-            if (dpiEl && preset.dpi) dpiEl.value = preset.dpi;
-            if (mouseEl && preset.mouseDPI) mouseEl.value = preset.mouseDPI;
-            if (pollEl && preset.pollingRate) pollEl.value = preset.pollingRate;
-            if (xEl && typeof preset.xSens === 'number') xEl.value = preset.xSens;
-            if (yEl && typeof preset.ySens === 'number') yEl.value = preset.ySens;
-            showToast('Preset applied: ' + name);
-        }
-
-        // User preset utilities
-        function readEmuFields(prefix) {
-            const obj = {};
-            try {
-                const dpiEl = document.getElementById(prefix + '-emulator-dpi');
-                const mouseEl = document.getElementById(prefix + '-mouse-dpi');
-                const pollEl = document.getElementById(prefix + '-polling-rate');
-                const xEl = document.getElementById(prefix + '-x-sens');
-                const yEl = document.getElementById(prefix + '-y-sens');
-                const tweaksEl = document.getElementById(prefix + '-tweaks');
-                const precisionEl = document.getElementById(prefix + '-precision-mode');
-                if (dpiEl && dpiEl.value) obj.dpi = parseInt(dpiEl.value) || undefined;
-                if (mouseEl && mouseEl.value) obj.mouseDPI = parseInt(mouseEl.value) || undefined;
-                if (pollEl && pollEl.value) obj.pollingRate = parseInt(pollEl.value) || undefined;
-                if (xEl && xEl.value) obj.xSens = parseFloat(xEl.value) || undefined;
-                if (yEl && yEl.value) obj.ySens = parseFloat(yEl.value) || undefined;
-                if (tweaksEl && tweaksEl.value) obj.tweaks = tweaksEl.value || undefined;
-                if (precisionEl) obj.precisionMode = precisionEl.checked || false;
-            } catch (e) {}
-            obj.meta = prefix;
-            return obj;
-        }
-
-        function saveCurrentAsPreset() {
-            const name = document.getElementById('preset-save-name').value.trim();
-            const target = document.getElementById('preset-save-target').value || 'ff';
-            if (!name) { showToast('أدخل اسم الحفظ'); return; }
-            const preset = readEmuFields(target);
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                saved[name] = preset;
-                localStorage.setItem('user_emu_presets', JSON.stringify(saved));
-                showToast('Preset saved: ' + name);
-                loadUserPresets();
-            } catch (e) { showToast('Failed to save preset'); }
-        }
-
-        function loadUserPresets() {
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                const list = document.getElementById('preset-list');
-                if (!list) return;
-                list.innerHTML = '';
-                for (const name of Object.keys(saved)) {
-                    const item = document.createElement('div');
-                    item.style.display = 'flex'; item.style.justifyContent = 'space-between'; item.style.alignItems = 'center'; item.style.marginBottom = '6px';
-                    item.innerHTML = `<div style="flex:1;">${name}</div><div style="display:flex; gap:6px;"><button class="ios-button" onclick="applyUserPreset('${name}')">تطبيق</button><button class="ios-button" onclick="deleteUserPreset('${name}')">حذف</button><button class="ios-button" onclick="exportSinglePreset('${name}')">تصدير</button></div>`;
-                    list.appendChild(item);
-                }
-            } catch (e) {}
-        }
-
-        function applyUserPreset(name, prefix) {
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                const p = saved[name];
-                if (!p) return;
-                const target = prefix || p.meta || 'ff';
-                const dpiEl = document.getElementById(target + '-emulator-dpi');
-                const mouseEl = document.getElementById(target + '-mouse-dpi');
-                const pollEl = document.getElementById(target + '-polling-rate');
-                const xEl = document.getElementById(target + '-x-sens');
-                const yEl = document.getElementById(target + '-y-sens');
-                const tweaksEl = document.getElementById(target + '-tweaks');
-                const precisionEl = document.getElementById(target + '-precision-mode');
-                if (dpiEl && p.dpi) dpiEl.value = p.dpi;
-                if (mouseEl && p.mouseDPI) mouseEl.value = p.mouseDPI;
-                if (pollEl && p.pollingRate) pollEl.value = p.pollingRate;
-                if (xEl && typeof p.xSens === 'number') xEl.value = p.xSens;
-                if (yEl && typeof p.ySens === 'number') yEl.value = p.ySens;
-                if (tweaksEl && p.tweaks !== undefined) tweaksEl.value = p.tweaks;
-                if (precisionEl) precisionEl.checked = !!p.precisionMode;
-                showToast('Preset applied: ' + name);
-            } catch (e) { showToast('Failed to apply preset'); }
-        }
-
-        function deleteUserPreset(name) {
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                delete saved[name];
-                localStorage.setItem('user_emu_presets', JSON.stringify(saved));
-                loadUserPresets();
-                showToast('Preset deleted');
-            } catch (e) { showToast('Failed to delete preset'); }
-        }
-
-        function exportPresets() {
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                const text = JSON.stringify(saved, null, 2);
-                document.getElementById('preset-import-export').value = text;
-                navigator.clipboard && navigator.clipboard.writeText(text).catch(()=>{});
-                showToast('Presets exported to textarea (copied to clipboard if allowed)');
-            } catch (e) { showToast('Export failed'); }
-        }
-
-        function exportSinglePreset(name) {
-            try {
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                const text = JSON.stringify({ [name]: saved[name] }, null, 2);
-                document.getElementById('preset-import-export').value = text;
-                navigator.clipboard && navigator.clipboard.writeText(text).catch(()=>{});
-                showToast('Preset exported');
-            } catch (e) { showToast('Export failed'); }
-        }
-
-        function importPresets() {
-            try {
-                const raw = document.getElementById('preset-import-export').value.trim();
-                if (!raw) { showToast('أدخل JSON للاستيراد'); return; }
-                const incoming = JSON.parse(raw);
-                const saved = JSON.parse(localStorage.getItem('user_emu_presets') || '{}');
-                Object.assign(saved, incoming);
-                localStorage.setItem('user_emu_presets', JSON.stringify(saved));
-                loadUserPresets();
-                showToast('Presets imported');
-            } catch (e) { showToast('Import failed'); }
-        }
-
-        function openPresetManager() { loadUserPresets(); document.getElementById('preset-manager').style.display = 'flex'; }
-        function closePresetManager() { document.getElementById('preset-manager').style.display = 'none'; }
-
-        // ============================================
-        // Toast
-        // ============================================
+        // Toast notification
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 3000);
         }
 
-        // Ensure key functions are exported to global scope for inline onclick handlers
-        try {
-            window.selectSpeedCard = selectSpeedCard;
-            window.showPage = showPage;
-            window.generateFreeFireSensitivity = generateFreeFireSensitivity;
-            window.generatePUBGSensitivity = generatePUBGSensitivity;
-            window.generateCODSensitivity = generateCODSensitivity;
-            window.openAdvancedTuning = openAdvancedTuning;
-            window.openPresetManager = openPresetManager;
-        } catch(e) {}
+        // Generate Functions (will be overridden by bridge.js)
+        window.generateFreeFireSensitivity = window.generateFreeFireSensitivity || function() {
+            showToast('جاري التحميل...');
+        };
 
-        // Load saved data on startup
-        document.addEventListener('DOMContentLoaded', function() {
-            // Performance check: disable heavy animations on low-end devices
-            try {
-                const cores = navigator.hardwareConcurrency || 4;
-                const mem = navigator.deviceMemory || 4;
-                if (cores < 4 || mem < 2) {
-                    document.body.classList.add('reduced-animations');
-                }
-            } catch (e) {}
+        window.generatePUBGSensitivity = window.generatePUBGSensitivity || function() {
+            showToast('جاري التحميل...');
+        };
 
-            // Ensure only the active page is visible for accessibility and performance
-            document.querySelectorAll('.page-section').forEach(p => {
-                if (p.classList.contains('active')) {
-                    p.removeAttribute('aria-hidden');
-                } else {
-                    p.setAttribute('aria-hidden', 'true');
-                }
-            });
+        window.generateCODSensitivity = window.generateCODSensitivity || function() {
+            showToast('جاري التحميل...');
+        };
 
-            // Sync emulator UI visibility
-            try { updateEmulatorInfo(); } catch (e) {}
-            try { updatePUBGEmulatorInfo(); } catch (e) {}
-            try { updateCODEmulatorInfo(); } catch (e) {}
-            try { loadTuningSettings(); } catch (e) {}
-            try { loadUserPresets(); } catch (e) {}
+        // Graphics Generation using Engine
+        window.generateGraphics = async function(game) {
+            if (!window.graphicsEngine) {
+                showToast('المحرك غير محمل بعد...');
+                return;
+            }
 
-            loadSavedSettings();
-            loadPlayerSettings();
-        });
+            showToast('جاري التحليل...');
+
+            // Wait for engine to initialize if needed
+            if (!window.graphicsEngine.initialized) {
+                await window.graphicsEngine.initialize();
+            }
+
+            let settings;
+            const gameNames = {
+                'freefire': 'Free Fire',
+                'pubg': 'PUBG Mobile',
+                'cod': 'Call of Duty Mobile'
+            };
+            
+            const gameIds = {
+                'freefire': 'ff',
+                'pubg': 'pubg',
+                'cod': 'cod'
+            };
+
+            // Generate settings based on game
+            switch(game) {
+                case 'freefire':
+                    settings = window.graphicsEngine.generateFreeFireSettings();
+                    break;
+                case 'pubg':
+                    settings = window.graphicsEngine.generatePUBGSettings();
+                    break;
+                case 'cod':
+                    settings = window.graphicsEngine.generateCODSettings();
+                    break;
+                default:
+                    showToast('لعبة غير معروفة');
+                    return;
+            }
+
+            // Build HTML
+            let html = `
+                <div style="margin-top: 30px; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); animation: fadeInUp 0.6s ease-out;">
+                    <h4 style="margin-bottom: 25px; font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-check-circle" style="color: #00ff88;"></i> 
+                        إعدادات ${gameNames[game]}
+                    </h4>
+                    <div class="graphics-result">
+            `;
+
+            // Display all settings
+            for (const [key, value] of Object.entries(settings)) {
+                if (key === 'recommendations' || key === 'deviceInfo') continue;
+                
+                const label = key.replace(/([A-Z])/g, ' $1').trim();
+                html += `<div><span>${label}</span><span>${value}</span></div>`;
+            }
+
+            html += `</div>`;
+
+            // Device Info
+            if (settings.deviceInfo) {
+                html += `
+                    <div style="margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; border-right: 3px solid rgba(255,255,255,0.3);">
+                        <h5 style="margin-bottom: 15px; font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-info-circle"></i> معلومات الجهاز
+                        </h5>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; font-size: 0.9rem;">
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">النوع:</strong> ${settings.deviceInfo.type}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">الذاكرة:</strong> ${settings.deviceInfo.ram}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">المعالج:</strong> ${settings.deviceInfo.cpu}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">GPU:</strong> ${settings.deviceInfo.gpu}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">الدقة:</strong> ${settings.deviceInfo.resolution}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">المستوى:</strong> ${settings.deviceInfo.tier}
+                            </div>
+                            <div style="color: rgba(255,255,255,0.7);">
+                                <strong style="color: rgba(255,255,255,0.9);">نقاط الأداء:</strong> ${settings.deviceInfo.performanceScore}/100
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Recommendations
+            if (settings.recommendations && settings.recommendations.length > 0) {
+                html += `
+                    <div style="margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; border-right: 3px solid rgba(255,215,0,0.5);">
+                        <h5 style="margin-bottom: 15px; font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.9); display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-lightbulb"></i> نصائح للتحسين
+                        </h5>
+                        <ul style="margin: 0; padding-right: 20px; color: rgba(255,255,255,0.7); line-height: 1.8;">
+                            ${settings.recommendations.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+
+            const resultId = gameIds[game] + '-graphics-results';
+            const resultElement = document.getElementById(resultId);
+            
+            if (!resultElement) {
+                console.error('❌ عنصر النتائج غير موجود:', resultId);
+                showToast('خطأ في عرض النتائج');
+                return;
+            }
+            
+            resultElement.innerHTML = html;
+            showToast('تم توليد إعدادات الجرافيك! ✅');
+        };
     </script>
 </body>
 </html>

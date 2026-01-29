@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار المحرك - RED SETTINGS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .test-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            margin-bottom: 15px;
+            color: #ffdd57;
+        }
+
+        button {
+            background: linear-gradient(45deg, #28a745, #34d058);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        #output {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #ff3b30;
+        }
+
+        .warning {
+            color: #ffdd57;
+        }
+
+        .info {
+            color: #007AFF;
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffdd57;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار محرك الحساسية</h1>
+
+        <div class="test-section">
+            <h2>اختبارات سريعة</h2>
+            <button onclick="testBasicGeneration()">توليد حساسية بسيطة</button>
+            <button onclick="testAllPlayStyles()">اختبار جميع الأنماط</button>
+            <button onclick="testWithEmulator()">اختبار مع محاكي</button>
+            <button onclick="testValidation()">اختبار التحقق</button>
+        </div>
+
+        <div class="test-section">
+            <h2>اختبارات متقدمة</h2>
+            <button onclick="runFullTest()">اختبار شامل</button>
+            <button onclick="testPerformance()">اختبار الأداء</button>
+            <button onclick="compareEngines()">مقارنة المحركات</button>
+            <button onclick="generateReport()">تقرير مفصل</button>
+        </div>
+
+        <div class="test-section">
+            <h2>أدوات</h2>
+            <button onclick="clearOutput()">مسح النتائج</button>
+            <button onclick="exportResults()">تصدير النتائج</button>
+            <button onclick="showDeviceInfo()">معلومات الجهاز</button>
+        </div>
+
+        <div id="output"></div>
+    </div>
+
+    <script type="module">
+        import { sensitivityEngine } from './src/utils/sensitivity-engine.js';
+        import { sensitivityValidator } from './src/utils/sensitivity-validator.js';
+        import { getEmulatorProfile, applyEmulatorProfile } from './src/utils/emulator-profiles.js';
+
+        // Make available globally
+        window.sensitivityEngine = sensitivityEngine;
+        window.sensitivityValidator = sensitivityValidator;
+        window.getEmulatorProfile = getEmulatorProfile;
+        window.applyEmulatorProfile = applyEmulatorProfile;
+
+        let testResults = [];
+
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const className = type === 'success' ? 'success' : 
+                            type === 'error' ? 'error' : 
+                            type === 'warning' ? 'warning' : 'info';
+            
+            output.innerHTML += `<span class="${className}">${message}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        window.testBasicGeneration = function() {
+            log('\n🎮 اختبار توليد حساسية بسيطة...', 'info');
+            
+            try {
+                const result = sensitivityEngine.generateSensitivity('medium', 'medium');
+                
+                log('✅ تم التوليد بنجاح!', 'success');
+                log('\nالحساسيات المولدة:', 'info');
+                log(`  • عامة: ${result.sensitivities.general}`);
+                log(`  • نقطة حمراء: ${result.sensitivities.redDot}`);
+                log(`  • سكوب 2x: ${result.sensitivities.scope2x}`);
+                log(`  • سكوب 4x: ${result.sensitivities.scope4x}`);
+                log(`  • قناصة: ${result.sensitivities.sniper}`);
+                log(`  • نظر حر: ${result.sensitivities.freeLook}`);
+                log(`  • زر الضرب: ${result.sensitivities.fireButtonSize}`);
+                
+                // التحقق
+                const validation = sensitivityValidator.validate(result.sensitivities);
+                log(`\n📊 النقاط: ${validation.score}/100`, validation.score >= 90 ? 'success' : 'warning');
+                
+                testResults.push({ test: 'basic', result, validation });
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        };
+
+        window.testAllPlayStyles = function() {
+            log('\n🎯 اختبار جميع أنماط اللعب...', 'info');
+            
+            const styles = ['fast', 'medium', 'slow', 'proSniper', 'aggressive', 'tactical'];
+            let totalScore = 0;
+            let allValid = true;
+
+            styles.forEach(style => {
+                try {
+                    const result = sensitivityEngine.generateSensitivity(style, 'medium');
+                    const validation = sensitivityValidator.validate(result.sensitivities);
+                    
+                    log(`\n📊 ${style}:`, 'info');
+                    log(`   النقاط: ${validation.score}/100`, validation.score >= 90 ? 'success' : 'warning');
+                    log(`   صالح: ${validation.isValid ? 'نعم ✅' : 'لا ❌'}`, validation.isValid ? 'success' : 'error');
+                    
+                    if (validation.errors.length > 0) {
+                        log(`   أخطاء: ${validation.errors.length}`, 'error');
+                        allValid = false;
+                    }
+                    
+                    totalScore += validation.score;
+                    testResults.push({ test: style, result, validation });
+                } catch (error) {
+                    log(`   ❌ خطأ: ${error.message}`, 'error');
+                    allValid = false;
+                }
+            });
+
+            const avgScore = totalScore / styles.length;
+            log(`\n📈 ملخص:`, 'info');
+            log(`   متوسط النقاط: ${avgScore.toFixed(1)}/100`, avgScore >= 90 ? 'success' : 'warning');
+            log(`   جميع الاختبارات صالحة: ${allValid ? 'نعم ✅' : 'لا ❌'}`, allValid ? 'success' : 'error');
+        };
+
+        window.testWithEmulator = function() {
+            log('\n🖥️ اختبار مع محاكي...', 'info');
+            
+            try {
+                const emulatorSettings = applyEmulatorProfile('BlueStacks', 'optimal');
+                log('إعدادات المحاكي:', 'info');
+                log(JSON.stringify(emulatorSettings, null, 2));
+                
+                const result = sensitivityEngine.generateSensitivity('fast', 'large', emulatorSettings);
+                const validation = sensitivityValidator.validate(result.sensitivities);
+                
+                log('\n✅ تم التوليد مع المحاكي!', 'success');
+                log(`النقاط: ${validation.score}/100`, validation.score >= 90 ? 'success' : 'warning');
+                
+                testResults.push({ test: 'emulator', result, validation });
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        };
+
+        window.testValidation = function() {
+            log('\n🔍 اختبار التحقق...', 'info');
+            
+            // اختبار قيم صحيحة
+            const validSens = {
+                general: 100,
+                redDot: 90,
+                scope2x: 75,
+                scope4x: 60,
+                sniper: 45,
+                freeLook: 105,
+                fireButtonSize: 50
+            };
+            
+            const validation1 = sensitivityValidator.validate(validSens);
+            log('اختبار قيم صحيحة:', 'info');
+            log(`  النقاط: ${validation1.score}/100`, validation1.score >= 90 ? 'success' : 'warning');
+            log(`  صالح: ${validation1.isValid ? 'نعم ✅' : 'لا ❌'}`, validation1.isValid ? 'success' : 'error');
+            
+            // اختبار قيم خاطئة
+            const invalidSens = {
+                general: 50,
+                redDot: 100, // خطأ: أعلى من العامة
+                scope2x: 75,
+                scope4x: 60,
+                sniper: 45,
+                freeLook: 55,
+                fireButtonSize: 50
+            };
+            
+            const validation2 = sensitivityValidator.validate(invalidSens);
+            log('\nاختبار قيم خاطئة:', 'info');
+            log(`  النقاط: ${validation2.score}/100`, 'warning');
+            log(`  صالح: ${validation2.isValid ? 'نعم' : 'لا ❌'}`, 'error');
+            log(`  أخطاء: ${validation2.errors.length}`, 'error');
+            validation2.errors.forEach(err => log(`    - ${err}`, 'error'));
+        };
+
+        window.runFullTest = function() {
+            log('\n🧪 بدء الاختبار الشامل...', 'info');
+            
+            try {
+                const testResult = sensitivityValidator.testEngine(sensitivityEngine);
+                
+                log('\n📈 نتائج الاختبار الشامل:', 'success');
+                log(`متوسط النقاط: ${testResult.avgScore.toFixed(1)}/100`, testResult.avgScore >= 90 ? 'success' : 'warning');
+                log(`جميع الاختبارات صالحة: ${testResult.allValid ? 'نعم ✅' : 'لا ❌'}`, testResult.allValid ? 'success' : 'error');
+                
+                testResults.push({ test: 'full', result: testResult });
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        };
+
+        window.testPerformance = function() {
+            log('\n⚡ اختبار الأداء...', 'info');
+            
+            const iterations = 1000;
+            const start = performance.now();
+            
+            for (let i = 0; i < iterations; i++) {
+                sensitivityEngine.generateSensitivity('medium', 'medium');
+            }
+            
+            const end = performance.now();
+            const duration = end - start;
+            const avgTime = duration / iterations;
+            
+            log(`✅ تم إنجاز ${iterations} عملية توليد`, 'success');
+            log(`الوقت الإجمالي: ${duration.toFixed(2)}ms`);
+            log(`متوسط الوقت: ${avgTime.toFixed(3)}ms`);
+            log(`العمليات في الثانية: ${(1000 / avgTime).toFixed(0)}`);
+            
+            if (avgTime < 5) {
+                log('🚀 الأداء ممتاز!', 'success');
+            } else if (avgTime < 10) {
+                log('✅ الأداء جيد', 'success');
+            } else {
+                log('⚠️ الأداء يحتاج تحسين', 'warning');
+            }
+        };
+
+        window.generateReport = function() {
+            log('\n📄 توليد تقرير مفصل...', 'info');
+            
+            try {
+                const result = sensitivityEngine.generateSensitivity('medium', 'medium');
+                const report = sensitivityValidator.generateReport(result.sensitivities);
+                
+                log('\n📊 التحليل:', 'info');
+                log(`  النطاق: ${report.analysis.range.min} - ${report.analysis.range.max}`);
+                log(`  المتوسط: ${report.analysis.average.toFixed(1)}`);
+                log(`  الانحراف المعياري: ${report.analysis.distribution.standardDeviation.toFixed(2)}`);
+                log(`  الاتساق: ${report.analysis.consistency.isConsistent ? 'نعم ✅' : 'لا ❌'}`, report.analysis.consistency.isConsistent ? 'success' : 'warning');
+                
+                log('\n💡 التوصيات:', 'info');
+                report.recommendations.forEach(rec => log(`  ${rec}`));
+                
+                testResults.push({ test: 'report', report });
+            } catch (error) {
+                log(`❌ خطأ: ${error.message}`, 'error');
+            }
+        };
+
+        window.showDeviceInfo = function() {
+            log('\n📱 معلومات الجهاز:', 'info');
+            
+            const profile = sensitivityEngine.deviceProfile;
+            
+            log(`  الدقة: ${profile.width}x${profile.height}`);
+            log(`  الدقة الفيزيائية: ${profile.physicalWidth}x${profile.physicalHeight}`);
+            log(`  Pixel Ratio: ${profile.pixelRatio}`);
+            log(`  نسبة العرض: ${profile.aspectRatio.toFixed(2)}`);
+            log(`  نوع الجهاز: ${profile.deviceType}`);
+            log(`  الذاكرة: ${profile.ram} GB`);
+            log(`  أنوية المعالج: ${profile.cpuCores}`);
+            log(`  مستوى الأداء: ${(profile.performanceLevel * 100).toFixed(0)}%`);
+            log(`  معدل التحديث: ${profile.refreshRate} Hz`);
+        };
+
+        window.clearOutput = function() {
+            document.getElementById('output').innerHTML = '';
+            testResults = [];
+        };
+
+        window.exportResults = function() {
+            if (testResults.length === 0) {
+                log('⚠️ لا توجد نتائج للتصدير', 'warning');
+                return;
+            }
+            
+            const data = JSON.stringify(testResults, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `test-results-${Date.now()}.json`;
+            a.click();
+            
+            log('✅ تم تصدير النتائج', 'success');
+        };
+
+        // رسالة ترحيب
+        log('🎮 مرحباً بك في اختبار محرك الحساسية!', 'success');
+        log('اختر اختباراً من الأزرار أعلاه للبدء.\n', 'info');
+    </script>
+</body>
+</html>

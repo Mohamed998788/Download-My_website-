@@ -1,4 +1,5 @@
 // RED SETTINGS App - Main JavaScript
+import { sensitivityEngine } from './utils/sensitivity-engine.js';
 
 // ============================================
 // App State
@@ -10,7 +11,8 @@ const AppState = {
     settings: {
         speed: 'medium',
         fireButtonSize: 'medium'
-    }
+    },
+    sensitivityEngine: sensitivityEngine
 };
 
 // ============================================
@@ -34,68 +36,17 @@ function showToast(message, duration = 3000) {
 }
 
 function getDeviceInfo() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const isTablet = /iPad|tablet/i.test(navigator.userAgent) || (width > 768 && isMobile);
-    
-    return {
-        width,
-        height,
-        deviceType: isTablet ? 'tablet' : isMobile ? 'mobile' : 'desktop',
-        aspectRatio: (width / height).toFixed(2),
-        pixelRatio: window.devicePixelRatio
-    };
-}
-
-function testPerformance() {
-    const start = performance.now();
-    for (let i = 0; i < 1000000; i++) Math.sqrt(i);
-    const duration = performance.now() - start;
-    
-    if (duration < 20) return 'high';
-    if (duration < 50) return 'medium';
-    return 'low';
+    // استخدام معلومات الجهاز من المحرك
+    return AppState.sensitivityEngine.deviceProfile;
 }
 
 // ============================================
-// Sensitivity Calculator
+// Sensitivity Calculator - استخدام المحرك الجديد
 // ============================================
-function generateSensitivityValues(speed, fireButtonSize) {
-    const deviceInfo = getDeviceInfo();
-    const performance = testPerformance();
-    
-    const baseValues = {
-        fast: { general: 150, redDot: 140, scope2x: 120, scope4x: 100, sniper: 80, freeLook: 160 },
-        medium: { general: 110, redDot: 100, scope2x: 85, scope4x: 70, sniper: 55, freeLook: 120 },
-        slow: { general: 70, redDot: 65, scope2x: 55, scope4x: 45, sniper: 35, freeLook: 75 }
-    };
-
-    const base = baseValues[speed] || baseValues.medium;
-    
-    const deviceMultiplier = deviceInfo.deviceType === 'mobile' ? 1.1 : 
-                            deviceInfo.deviceType === 'tablet' ? 1.05 : 0.95;
-    
-    const performanceMultiplier = performance === 'high' ? 1.05 : 
-                                 performance === 'low' ? 0.95 : 1;
-
-    const randomize = (val) => {
-        const result = Math.round(val * deviceMultiplier * performanceMultiplier * (0.95 + Math.random() * 0.1));
-        return Math.min(200, Math.max(20, result));
-    };
-
-    const fireSizes = { small: [15, 35], medium: [40, 70], large: [75, 100] };
-    const [minFire, maxFire] = fireSizes[fireButtonSize] || fireSizes.medium;
-
-    return {
-        general: randomize(base.general),
-        redDot: randomize(base.redDot),
-        scope2x: randomize(base.scope2x),
-        scope4x: randomize(base.scope4x),
-        sniper: randomize(base.sniper),
-        freeLook: randomize(base.freeLook),
-        fireButtonSize: Math.floor(Math.random() * (maxFire - minFire + 1)) + minFire
-    };
+function generateSensitivityValues(speed, fireButtonSize, emulatorSettings = null) {
+    // استخدام المحرك المحسّن
+    const result = AppState.sensitivityEngine.generateSensitivity(speed, fireButtonSize, emulatorSettings);
+    return result.sensitivities;
 }
 
 // ============================================

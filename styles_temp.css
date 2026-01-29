@@ -1,0 +1,714 @@
+/* ============================================
+   RED SETTINGS v3.0 - Modern Luxury Design
+   Black & White Theme with Floating Navigation
+   ============================================ */
+
+/* ============================================
+   CSS Variables & Root Styles
+   ============================================ */
+:root {
+    --primary-black: #000000;
+    --secondary-black: #0a0a0a;
+    --dark-gray: #1a1a1a;
+    --medium-gray: #2a2a2a;
+    --light-gray: #3a3a3a;
+    --pure-white: #ffffff;
+    --off-white: #f5f5f5;
+    --accent-gray: #666666;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   Base Styles & Reset
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--primary-black) 0%, var(--secondary-black) 50%, var(--dark-gray) 100%);
+    color: var(--pure-white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    line-height: 1.6;
+}
+
+/* Animated Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* ============================================
+   Container & Layout
+   ============================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px 120px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-align: center;
+    margin-bottom: 60px;
+    background: linear-gradient(135deg, var(--pure-white) 0%, var(--accent-gray) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--pure-white), transparent);
+    animation: lineExpand 1s ease-out 0.5s both;
+}
+
+h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 30px;
+    color: var(--pure-white);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes lineExpand {
+    from { width: 0; }
+    to { width: 80px; }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+}
+
+/* ============================================
+   Buttons - Modern Luxury Style
+   ============================================ */
+button {
+    position: relative;
+    background: var(--pure-white);
+    color: var(--primary-black);
+    border: none;
+    padding: 18px 36px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+    width: 100%;
+    margin-top: 15px;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+button:hover::before {
+    left: 100%;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
+    background: var(--off-white);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+button i {
+    margin-left: 8px;
+    transition: transform 0.3s;
+}
+
+button:hover i {
+    transform: translateX(3px);
+}
+
+/* ============================================
+   Navigation Bar - Adaptive Design
+   ============================================ */
+.navbar {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-color);
+    display: flex;
+    z-index: 1000;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    
+    /* Default: Bottom floating (Mobile) */
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 25px;
+    padding: 10px 15px;
+    gap: 6px;
+    flex-direction: row;
+    animation: navSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: calc(100vw - 40px);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.navbar::-webkit-scrollbar {
+    display: none;
+}
+
+@keyframes navSlideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 100px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes navSlideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes navSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 14px;
+    color: var(--accent-gray);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 65px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.navbar a i {
+    font-size: 20px;
+    transition: all 0.3s;
+}
+
+.navbar a span {
+    font-size: 10px;
+    letter-spacing: 0.3px;
+}
+
+.navbar a:hover {
+    color: var(--pure-white);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.navbar a:hover i {
+    transform: translateY(-2px);
+}
+
+.navbar a.active {
+    color: var(--primary-black);
+    background: var(--pure-white);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.navbar a.active i {
+    transform: scale(1.1);
+}
+
+/* ============================================
+   Extra Navigation (Dropdown)
+   ============================================ */
+.extra-navbar {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 15px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 999;
+    max-width: 90vw;
+    width: 400px;
+    max-height: 60vh;
+    overflow-y: auto;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    animation: dropdownSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.extra-navbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.extra-navbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.extra-navbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.extra-navbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.extra-navbar a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    color: var(--pure-white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid transparent;
+}
+
+.extra-navbar a i {
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+.extra-navbar a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-color);
+    transform: translateX(4px);
+}
+
+.extra-navbar a.players-settings-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+}
+
+/* ============================================
+   Options Container (Speed & Fire Button)
+   ============================================ */
+.options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 50px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.option-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+}
+
+.option-section:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.speed-options,
+.fire-button-size-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.speed-options label,
+.fire-button-size-options label {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 140px;
+}
+
+.speed-options label:hover,
+.fire-button-size-options label:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.speed-options label i,
+.fire-button-size-options label i {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    color: var(--pure-white);
+    transition: all 0.3s;
+}
+
+.speed-options label:hover i,
+.fire-button-size-options label:hover i {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.speed-options label span,
+.fire-button-size-options label span {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 4px;
+    color: var(--pure-white);
+}
+
+.speed-options label small,
+.fire-button-size-options label small {
+    font-size: 0.75rem;
+    color: var(--accent-gray);
+    text-align: center;
+}
+
+.speed-options input[type="radio"],
+.fire-button-size-options input[type="radio"] {
+    display: none;
+}
+
+.speed-options input[type="radio"]:checked + label,
+.fire-button-size-options input[type="radio"]:checked + label {
+    background: var(--pure-white);
+    border-color: var(--pure-white);
+    color: var(--primary-black);
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.speed-options input[type="radio"]:checked + label i,
+.fire-button-size-options input[type="radio"]:checked + label i {
+    color: var(--primary-black);
+    transform: scale(1.15);
+}
+
+.speed-options input[type="radio"]:checked + label span,
+.fire-button-size-options input[type="radio"]:checked + label span {
+    color: var(--primary-black);
+}
+
+.speed-options input[type="radio"]:checked + label small,
+.fire-button-size-options input[type="radio"]:checked + label small {
+    color: var(--medium-gray);
+}
+
+.speed-options input[type="radio"]:checked + label::after,
+.fire-button-size-options input[type="radio"]:checked + label::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: var(--primary-black);
+    color: var(--pure-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================
+   Results Display
+   ============================================ */
+.result {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 30px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.result div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border-left: 3px solid var(--pure-white);
+    transition: all 0.3s;
+}
+
+.result div:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.result div span:first-child {
+    font-weight: 500;
+    color: var(--accent-gray);
+}
+
+.result div span:last-child {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--pure-white);
+}
+
+/* ============================================
+   Graphics Settings
+   ============================================ */
+.graphics-result {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.graphics-result div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--pure-white);
+    transition: all 0.3s;
+}
+
+.graphics-result div:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(6px);
+}
+
+.graphics-result div span:first-child {
+    font-weight: 500;
+    color: var(--accent-gray);
+    font-size: 0.95rem;
+}
+
+.graphics-result div span:last-child {
+    font-weight: 700;
+    color: var(--pure-white);
+    font-size: 1rem;
+}
+
+/* ============================================
+   Top Action Buttons (App, Translation)
+   ============================================ */
+.get-app-button,
+.translation-button {
+    position: fixed;
+    top: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--pure-white);
+    color: var(--primary-black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--border-color);
+}
+
+.get-app-button {
+    left: 30px;
+    animation: fadeInDown 0.6s ease-out 0.2s both;
+}
+
+.translation-button {
+    right: 30px;
+    animation: fadeInDown 0.6s ease-out 0.4s both;
+}
+
+.get-app-button:hover,
+.translation-button:hover {
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
+}
+
+.get-app-button i,
+.translation-button i {
+    font-size: 22px;
+    transition: transform 0.3s;
+}
+
+.get-app-button:hover i,
+.translation-button:hover i {
+    transform: rotate(10deg) scale(1.1);
+}
+

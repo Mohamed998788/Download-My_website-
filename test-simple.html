@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار سريع - RED SETTINGS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 اختبار سريع للمحرك</h1>
+    <p>اضغط الزر لتوليد حساسية</p>
+    
+    <button onclick="testGenerate()">توليد حساسية</button>
+    
+    <div id="result"></div>
+
+    <script type="module">
+        import { sensitivityEngine } from './src/utils/sensitivity-engine.js';
+        
+        window.testGenerate = function() {
+            try {
+                console.log('🎯 بدء التوليد...');
+                
+                const result = sensitivityEngine.generateSensitivity('medium', 'medium');
+                
+                console.log('✅ تم التوليد:', result);
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `
+                    <h3>✅ تم التوليد بنجاح!</h3>
+                    <p><strong>حساسية عامة:</strong> ${result.sensitivities.general}</p>
+                    <p><strong>نقطة حمراء:</strong> ${result.sensitivities.redDot}</p>
+                    <p><strong>سكوب 2x:</strong> ${result.sensitivities.scope2x}</p>
+                    <p><strong>سكوب 4x:</strong> ${result.sensitivities.scope4x}</p>
+                    <p><strong>قناصة:</strong> ${result.sensitivities.sniper}</p>
+                    <p><strong>نظر حر:</strong> ${result.sensitivities.freeLook}</p>
+                    <p><strong>زر الضرب:</strong> ${result.sensitivities.fireButtonSize}</p>
+                `;
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                document.getElementById('result').innerHTML = `
+                    <h3 style="color: #ff3b30;">❌ خطأ!</h3>
+                    <p>${error.message}</p>
+                `;
+            }
+        };
+        
+        console.log('✅ المحرك جاهز!');
+    </script>
+</body>
+</html>
